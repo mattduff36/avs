@@ -84,7 +84,7 @@ export default function AboutPage() {
                 In 1971 Doug and Vivienne Squires first established A & V Squires as a plant hire company in Southwell. It has been a family run business for over fifty years.
               </p>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                In the early 1990s management of the company was gradually passed over to Doug and Vivienne's two sons Philip and Robert. They both played a major role in the company's relocation to new purpose-built premises in Southwell in 2001, complete with offices and a workshop.
+                In the early 1990s management of the company was gradually passed over to Doug and Vivienne&apos;s two sons Philip and Robert. They both played a major role in the company&apos;s relocation to new purpose-built premises in Southwell in 2001, complete with offices and a workshop.
               </p>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
                 It was after this move that Doug then handed complete control to his sons. Working together, they ensured that the company continued to expand and grow to become one of the largest plant hire and earth moving contractors in the East Midlands. Civil engineering was also added to the services offered and is an area of specialism that has gone from strength-to-strength over the past fifteen years, complementing the plant side of the business.

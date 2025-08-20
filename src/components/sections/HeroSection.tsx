@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Phone, CheckCircle, Users, Award } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { siteData } from "@/data/site-data";
 
 export function HeroSection() {

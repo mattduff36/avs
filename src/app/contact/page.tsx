@@ -139,7 +139,7 @@ export default function ContactPage() {
                     Send Us a Message
                   </CardTitle>
                   <p className="text-slate-600">
-                    Fill out the form below and we'll get back to you within 24 hours.
+                    Fill out the form below and we&apos;ll get back to you within 24 hours.
                   </p>
                 </CardHeader>
                 <CardContent className="px-0 pb-0">

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -82,7 +82,7 @@ export default function NewsPage() {
       </section>
 
       {/* Featured Article */}
-      {newsItems.filter(item => item.featured).map((article, index) => (
+      {newsItems.filter(item => item.featured).map((article) => (
         <section key={article.id} className="py-20">
           <div className="container mx-auto px-4">
             <motion.div

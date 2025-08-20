@@ -155,7 +155,7 @@ export default function ProjectsPage() {
               Have a Project in Mind?
             </h3>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Let's discuss how we can help bring your construction project to life with our expertise and experience.
+              Let&apos;s discuss how we can help bring your construction project to life with our expertise and experience.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button

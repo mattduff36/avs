@@ -9,9 +9,9 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizeCss: true,
-    turbo: {
-      root: __dirname,
-    },
+  },
+  turbopack: {
+    root: __dirname,
   },
 };
 

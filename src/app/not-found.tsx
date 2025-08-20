@@ -38,7 +38,7 @@ export default function NotFound() {
               Page Not Found
             </h2>
             <p className="text-xl text-slate-600 leading-relaxed">
-              Sorry, we couldn't find the page you're looking for. 
+              Sorry, we couldn&apos;t find the page you&apos;re looking for. 
               The page might have been moved, deleted, or the URL might be incorrect.
             </p>
           </motion.div>
@@ -81,7 +81,7 @@ export default function NotFound() {
             className="mt-12 pt-8 border-t border-slate-200"
           >
             <p className="text-slate-500 mb-4">
-              Need help finding what you're looking for?
+              Need help finding what you&apos;re looking for?
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
               <Link href="/services" className="text-custom-yellow hover:text-custom-yellow-hover hover:underline">
