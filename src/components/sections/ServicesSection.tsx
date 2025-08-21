@@ -3,14 +3,13 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import { siteData } from "@/data/site-data";
 import { Icon } from "@/lib/icons";
 
 export function ServicesSection() {
-  const featuredServices = siteData.services.filter(service => service.featured);
+  const featuredServices = siteData.services.slice(0, 3);
 
   return (
     <section className="py-20 bg-gray-50">
@@ -42,42 +41,42 @@ export function ServicesSection() {
               transition={{ duration: 0.6, delay: index * 0.2 }}
               viewport={{ once: true }}
             >
-                             <Link href={`/services#${service.id}`}>
-                 <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
-                   <div className="relative h-64 overflow-hidden">
-                     <Image
-                       src={service.image!}
-                       alt={service.name}
-                       fill
-                       className="object-cover group-hover:scale-110 transition-transform duration-500"
-                     />
-                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                     
-                     {/* Service Icon */}
-                     <div className="absolute top-4 right-4">
-                       <div className="w-12 h-12 bg-custom-yellow rounded-full flex items-center justify-center text-white">
-                         <Icon name={service.icon} className="h-6 w-6" />
-                       </div>
-                     </div>
+              <Link href={`/services#${service.id}`}>
+                <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
+                  <div className="relative h-64 overflow-hidden">
+                    <Image
+                      src={service.image!}
+                      alt={service.name}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    
+                    {/* Service Icon */}
+                    <div className="absolute top-4 right-4">
+                      <div className="w-12 h-12 bg-custom-yellow rounded-full flex items-center justify-center text-white">
+                        <Icon name={service.icon} className="h-6 w-6" />
+                      </div>
+                    </div>
 
-                     {/* Overlay Content */}
-                     <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                       <h3 className="text-xl font-bold mb-2">{service.name}</h3>
-                     </div>
-                   </div>
+                    {/* Overlay Content */}
+                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                      <h3 className="text-xl font-bold mb-2">{service.name}</h3>
+                    </div>
+                  </div>
 
-                   <CardContent className="p-6">
-                     <p className="text-slate-600 mb-6 leading-relaxed">
-                       {service.description}
-                     </p>
-                     
-                     <div className="flex items-center text-custom-yellow font-medium group-hover:text-custom-yellow-hover transition-colors">
-                       <span>Learn More</span>
-                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                     </div>
-                   </CardContent>
-                 </Card>
-               </Link>
+                  <CardContent className="p-6">
+                    <p className="text-slate-600 mb-6 leading-relaxed">
+                      {service.description}
+                    </p>
+                    
+                    <div className="flex items-center text-custom-yellow font-medium group-hover:text-custom-yellow-hover transition-colors">
+                      <span>Learn More</span>
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             </motion.div>
           ))}
         </div>

@@ -9,11 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { siteData } from "@/data/site-data";
 import { cn } from "@/lib/utils";
@@ -89,38 +87,14 @@ export function Header() {
               <NavigationMenuList>
                 {siteData.navigation.map((item) => (
                   <NavigationMenuItem key={item.label}>
-                    {item.submenu ? (
-                      <>
-                        <NavigationMenuTrigger className="text-slate-700 hover:text-slate-900 text-sm">
-                          {item.label}
-                        </NavigationMenuTrigger>
-                        <NavigationMenuContent>
-                          <div className="grid w-[400px] gap-3 p-4">
-                            {item.submenu.map((subItem) => (
-                              <NavigationMenuLink key={subItem.label} asChild>
-                                <Link
-                                  href={subItem.href}
-                                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                >
-                                  <div className="text-sm font-medium leading-none">
-                                    {subItem.label}
-                                  </div>
-                                </Link>
-                              </NavigationMenuLink>
-                            ))}
-                          </div>
-                        </NavigationMenuContent>
-                      </>
-                    ) : (
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href={item.href}
-                          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-                        >
-                          {item.label}
-                        </Link>
-                      </NavigationMenuLink>
-                    )}
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href={item.href}
+                        className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                      >
+                        {item.label}
+                      </Link>
+                    </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}
               </NavigationMenuList>
@@ -137,27 +111,13 @@ export function Header() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <nav className="flex flex-col space-y-4 mt-8">
                 {siteData.navigation.map((item) => (
-                  <div key={item.label}>
-                    <Link
-                      href={item.href}
-                      className="text-lg font-medium text-slate-700 hover:text-slate-900 block py-2"
-                    >
-                      {item.label}
-                    </Link>
-                    {item.submenu && (
-                      <div className="ml-4 mt-2 space-y-2">
-                        {item.submenu.map((subItem) => (
-                          <Link
-                            key={subItem.label}
-                            href={subItem.href}
-                            className="text-sm text-slate-600 hover:text-slate-800 block py-1"
-                          >
-                            {subItem.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="text-lg font-medium text-slate-700 hover:text-slate-900 block py-2"
+                  >
+                    {item.label}
+                  </Link>
                 ))}
               </nav>
             </SheetContent>

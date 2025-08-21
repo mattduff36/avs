@@ -78,10 +78,10 @@ export default function AboutPage() {
                 <span className="text-custom-yellow">ESTABLISHED SINCE 1971</span>
               </h2>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                Today, A & V Squires Plant Co. Ltd has over 75 employees and is one of the leading civil engineering, contract earth moving and plant hire companies in the East Midlands. We cover Nottinghamshire, Derbyshire, Leicestershire, Lincolnshire and Yorkshire but also operate on a national scale.
+                Today, A&V Squires Plant Co. Ltd has over 75 employees and is one of the leading civil engineering, contract earth moving and plant hire companies in the East Midlands. We cover Nottinghamshire, Derbyshire, Leicestershire, Lincolnshire and Yorkshire but also operate on a national scale.
               </p>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                In 1971 Doug and Vivienne Squires first established A & V Squires as a plant hire company in Southwell. It has been a family run business for over fifty years.
+                In 1971 Doug and Vivienne Squires first established A&V Squires as a plant hire company in Southwell. It has been a family run business for over fifty years.
               </p>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
                 In the early 1990s management of the company was gradually passed over to Doug and Vivienne&apos;s two sons Philip and Robert. They both played a major role in the company&apos;s relocation to new purpose-built premises in Southwell in 2001, complete with offices and a workshop.
