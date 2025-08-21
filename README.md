@@ -143,4 +143,4 @@ For technical support or questions about the website, please contact the develop
 
 ---
 
-Built with ❤️ for A&V Squires Plant Company LTD - Celebrating 50+ years of excellence in construction.
+Built with ❤️ for A&V Squires Plant Company LTD - Delivering excellence in construction since 1971.

@@ -12,11 +12,11 @@ export default function NewsPage() {
   const newsItems = [
     {
       id: 1,
-      title: "A&V Squires Celebrates 50+ Years of Excellence",
-      excerpt: "Reflecting on over five decades of successful projects and continued growth in the construction industry.",
+      title: "A&V Squires Expands Fleet with Latest Equipment",
+      excerpt: "Continuing our commitment to excellence with significant investment in modern machinery and technology for enhanced project delivery.",
       date: "2024-01-15",
       category: "Company News",
-      image: "/images/50-years-badge.png",
+      image: "/images/plant-hire-new.jpg",
       featured: true
     },
     {
@@ -68,9 +68,7 @@ export default function NewsPage() {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <Badge variant="secondary" className="bg-custom-yellow/90 text-white mb-6">
-              Stay Updated
-            </Badge>
+
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Latest <span className="text-custom-yellow">News</span>
             </h1>
@@ -142,7 +140,7 @@ export default function NewsPage() {
       ))}
 
       {/* News Grid */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-grey-50">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

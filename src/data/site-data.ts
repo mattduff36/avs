@@ -2,7 +2,7 @@ export const siteData = {
   company: {
     name: "A&V Squires Plant Company LTD",
     shortName: "A&V Squires",
-    established: "50+ years",
+    established: "Established Since 1971",
     location: "East Midlands, UK",
     serviceArea: "Nottinghamshire, Derbyshire, Leicestershire, Lincolnshire, Yorkshire, and nationwide",
     tagline: "One of the East Midland's leading plant hire, civil engineering and contract earthmoving companies",
@@ -67,12 +67,12 @@ export const siteData = {
     {
       id: "earthmoving",
       name: "Contract Earthmoving",
-      description: "A&V Squires Plant Co Ltd has been undertaking and managing earth moving projects for more than 50 years. We continue to provide fast, flexible and reliable professional services over the East & West Midlands region.",
-      fullDescription: "A&V Squires Plant Co Ltd has been undertaking and managing earth moving projects for more than 50 years. Based in the East Midlands, we continue to provide fast, flexible and reliable professional services over the East & West Midlands region together with contracting services in Nottinghamshire, Leicestershire, Lincolnshire and Yorkshire regions. We continually exceed the expectations of our clients, working to very high standards within our internationally accredited Quality Management System (ISO 9001/2015). We continue to invest heavily in our fleet of light, medium and heavy construction excavators and equipment, together with investment in our most precious asset – Human Resources.",
+      description: "A&V Squires Plant Co Ltd has been undertaking and managing earth moving projects with decades of proven expertise. We continue to provide fast, flexible and reliable professional services over the East & West Midlands region.",
+      fullDescription: "A&V Squires Plant Co Ltd has been undertaking and managing earth moving projects with extensive industry expertise. Based in the East Midlands, we continue to provide fast, flexible and reliable professional services over the East & West Midlands region together with contracting services in Nottinghamshire, Leicestershire, Lincolnshire and Yorkshire regions. We continually exceed the expectations of our clients, working to very high standards within our internationally accredited Quality Management System (ISO 9001/2015). We continue to invest heavily in our fleet of light, medium and heavy construction excavators and equipment, together with investment in our most precious asset – Human Resources.",
       image: "/images/earthmoving-new.jpg",
       icon: "Pickaxe",
       features: [
-        "50+ years of earthmoving experience",
+        "Extensive earthmoving expertise",
         "GPS equipped machines available",
         "All operators hold CPCS blue cards",
         "ISO 9001/2015 Quality Management System",
@@ -202,8 +202,8 @@ export const siteData = {
   ],
   stats: [
     {
-      number: "50+",
-      label: "Years Experience"
+      number: "Expert",
+      label: "Professional Service"
     },
     {
       number: "75+",

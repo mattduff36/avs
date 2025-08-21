@@ -12,7 +12,7 @@ export function ServicesSection() {
   const featuredServices = siteData.services.slice(0, 3);
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-grey-50">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <motion.div
@@ -26,8 +26,8 @@ export function ServicesSection() {
             Our <span className="text-custom-yellow">Services</span>
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-            From civil engineering to specialized transport, we provide comprehensive 
-            construction services with over 50 years of expertise.
+            From civil engineering to specialised transport, we provide comprehensive 
+            construction services with extensive industry expertise.
           </p>
         </motion.div>
 
@@ -127,7 +127,7 @@ export function ServicesSection() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border border-gray-100">
+          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border border-grey-100">
             <h3 className="text-3xl font-bold text-slate-900 mb-6">
               Industry <span className="text-custom-yellow">Accreditations</span>
             </h3>

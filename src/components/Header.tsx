@@ -54,7 +54,7 @@ export function Header() {
             </div>
           </div>
           <div className="hidden md:block text-xs">
-            {siteData.company.established} of Excellence
+            {siteData.company.established}
           </div>
         </div>
       </div>

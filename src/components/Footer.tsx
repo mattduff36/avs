@@ -31,7 +31,7 @@ export function Footer() {
               <div>
                 <div className="font-bold text-lg">A&V Squires</div>
                 <div className="text-sm text-slate-300">
-                  {siteData.company.established} of Excellence
+                  {siteData.company.established}
                 </div>
               </div>
             </div>
@@ -119,7 +119,16 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <div className="text-sm text-slate-300">
-            © 2024 A&V Squires Plant Company LTD. All rights reserved.
+            Website developed by{" "}
+            <Link 
+              href="https://www.mpdee.co.uk/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-custom-yellow hover:text-custom-yellow-hover transition-colors"
+            >
+              MPDEE Development
+            </Link>{" "}
+            © 2025. All rights reserved.
           </div>
           <div className="flex space-x-6 text-sm text-slate-300">
             <Link href="/privacy" className="hover:text-white transition-colors">

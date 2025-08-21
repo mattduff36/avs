@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
+
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { siteData } from "@/data/site-data";
 
@@ -59,9 +59,7 @@ export default function ContactPage() {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <Badge variant="secondary" className="bg-custom-yellow/90 text-white mb-6">
-              Get In Touch
-            </Badge>
+
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Contact <span className="text-custom-yellow">Us</span>
             </h1>
@@ -74,7 +72,7 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Information Cards */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-grey-50">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -240,7 +238,7 @@ export default function ContactPage() {
                     <div className="w-6 h-6 bg-custom-yellow rounded-full flex items-center justify-center">
                       <div className="w-2 h-2 bg-white rounded-full"></div>
                     </div>
-                    <span className="text-slate-700">{siteData.company.established} of experience</span>
+                    <span className="text-slate-700">Decades of proven experience</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="w-6 h-6 bg-custom-yellow rounded-full flex items-center justify-center">

@@ -2,34 +2,12 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Users, Award, Clock } from "lucide-react";
+
+
+
 import { siteData } from "@/data/site-data";
 
 export default function AboutPage() {
-  const values = [
-    {
-      icon: <CheckCircle className="h-8 w-8 text-custom-yellow" />,
-      title: "Quality Assurance",
-      description: "We maintain the highest standards in all our projects, ensuring exceptional results every time."
-    },
-    {
-      icon: <Users className="h-8 w-8 text-custom-yellow" />,
-      title: "Expert Team",
-      description: "Our skilled professionals bring decades of experience to every project we undertake."
-    },
-    {
-      icon: <Award className="h-8 w-8 text-custom-yellow" />,
-      title: "Industry Recognition",
-      description: "Recognized as one of the leading companies in the East Midlands construction sector."
-    },
-    {
-      icon: <Clock className="h-8 w-8 text-custom-yellow" />,
-      title: "Reliable Service",
-      description: "24/7 availability and commitment to meeting project deadlines without compromise."
-    }
-  ];
 
   return (
     <div className="min-h-screen">
@@ -51,9 +29,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <Badge variant="secondary" className="bg-custom-yellow/90 text-white mb-6">
-              {siteData.company.established} of Excellence
-            </Badge>
+
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               About <span className="text-custom-yellow">A&V Squires</span>
             </h1>
@@ -81,7 +57,7 @@ export default function AboutPage() {
                 Today, A&V Squires Plant Co. Ltd has over 75 employees and is one of the leading civil engineering, contract earth moving and plant hire companies in the East Midlands. We cover Nottinghamshire, Derbyshire, Leicestershire, Lincolnshire and Yorkshire but also operate on a national scale.
               </p>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                In 1971 Doug and Vivienne Squires first established A&V Squires as a plant hire company in Southwell. It has been a family run business for over fifty years.
+                In 1971 Doug and Vivienne Squires first established A&V Squires as a plant hire company in Southwell. It has been a family run business with a strong tradition of excellence.
               </p>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
                 In the early 1990s management of the company was gradually passed over to Doug and Vivienne&apos;s two sons Philip and Robert. They both played a major role in the company&apos;s relocation to new purpose-built premises in Southwell in 2001, complete with offices and a workshop.
@@ -101,101 +77,47 @@ export default function AboutPage() {
               viewport={{ once: true }}
               className="relative"
             >
-              <Image
-                src="/images/50-years-badge.png"
-                alt="50 Years Experience"
-                width={400}
-                height={500}
-                className="mx-auto drop-shadow-lg"
-              />
+              <div className="bg-custom-yellow rounded-2xl p-8 shadow-lg">
+                <h3 className="text-3xl font-bold text-white text-center mb-4">Quality & Excellence</h3>
+                <p className="text-white/90 text-center text-lg leading-relaxed">
+                  Committed to delivering exceptional results through professional expertise, 
+                  modern equipment, and dedicated service across the East Midlands region.
+                </p>
+              </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 bg-custom-yellow">
+      {/* Industry Accreditations Section */}
+      <section className="py-20 bg-grey-50">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Our Achievements
-            </h2>
-            <p className="text-xl text-custom-yellow-light">
-              Numbers that speak for our excellence
-            </p>
+            <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border border-gray-100">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+                Industry <span className="text-custom-yellow">Accreditations</span>
+              </h2>
+              <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto">
+                Our commitment to quality and safety is recognized through industry-leading accreditations and certifications.
+              </p>
+              <div className="flex justify-center">
+                <Image
+                  src="https://static.wixstatic.com/media/59d7f2_cd98b97515f84e9fb1502dbf05cbff1d~mv2.jpg/v1/fill/w_951,h_225,al_c,lg_1,q_80,enc_avif,quality_auto/Avs_edited.jpg"
+                  alt="A&V Squires Industry Accreditations and Certifications"
+                  width={951}
+                  height={225}
+                  className="rounded-lg shadow-md max-w-full h-auto"
+                  priority
+                />
+              </div>
+            </div>
           </motion.div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {siteData.stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center text-white"
-              >
-                <div className="text-4xl md:text-5xl font-bold mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-custom-yellow-light">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Values Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
-              Our <span className="text-custom-yellow">Values</span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              The principles that guide everything we do
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <motion.div
-                key={value.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card className="p-6 h-full hover:shadow-lg transition-shadow duration-300">
-                  <CardContent className="p-0 text-center">
-                    <div className="mb-4 flex justify-center">
-                      {value.icon}
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">
-                      {value.title}
-                    </h3>
-                    <p className="text-slate-600 leading-relaxed">
-                      {value.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -213,7 +135,7 @@ export default function AboutPage() {
             </h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Get in touch today to discuss your project requirements and see how 
-              our {siteData.company.established} of experience can benefit you.
+              our decades of experience can benefit you.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.a

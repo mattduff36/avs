@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+
 import { ArrowRight, Phone, X, ChevronDown } from "lucide-react";
 import { siteData } from "@/data/site-data";
 
@@ -62,15 +62,13 @@ export default function ServicesPage() {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <Badge variant="secondary" className="bg-custom-yellow/90 text-white mb-6">
-              Comprehensive Solutions
-            </Badge>
+
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Our <span className="text-custom-yellow">Services</span>
             </h1>
             <p className="text-xl text-gray-300 leading-relaxed">
-              From civil engineering to specialized transport, we provide complete 
-              construction solutions backed by {siteData.company.established} of expertise.
+              From civil engineering to specialised transport, we provide complete 
+              construction solutions backed by decades of proven expertise.
             </p>
           </motion.div>
         </div>
@@ -229,34 +227,7 @@ export default function ServicesPage() {
             })}
           </div>
 
-          {/* Call-to-Action Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <div className="bg-white rounded-2xl p-8 md:p-12 shadow-xl border border-gray-100">
-              <h3 className="text-3xl font-bold text-slate-900 mb-4">
-                Need a Custom Solution?
-              </h3>
-              <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
-                Don&apos;t see exactly what you&apos;re looking for? Our experienced team can create 
-                bespoke solutions tailored to your specific project requirements.
-              </p>
-              <Button
-                asChild
-                size="lg"
-                className="bg-custom-yellow hover:bg-custom-yellow-hover text-slate-900 font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <Link href="/contact">
-                  Get Custom Quote
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
-          </motion.div>
+
 
           {/* Industry Accreditations Section */}
           <motion.div
@@ -303,7 +274,7 @@ export default function ServicesPage() {
             </h2>
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
               Contact us today for a free consultation and professional service. Our expert team is ready 
-              to help bring your construction project to life with our {siteData.company.established} of experience.
+              to help bring your construction project to life with our decades of experience.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

@@ -1,108 +1,89 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Home, ArrowLeft } from "lucide-react";
+import { Home, Search, Phone } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-grey-50">
       <div className="container mx-auto px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-2xl mx-auto"
-        >
-          {/* Large 404 */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-8"
-          >
-            <h1 className="text-9xl md:text-[12rem] font-bold text-custom-yellow/20 leading-none">
-              404
-            </h1>
-          </motion.div>
+        <div className="max-w-2xl mx-auto">
+          {/* 404 Graphic */}
+          <div className="mb-8">
+            <div className="text-9xl font-bold text-custom-yellow mb-4">404</div>
+            <div className="w-24 h-1 bg-custom-yellow mx-auto mb-8"></div>
+          </div>
 
           {/* Error Message */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-8"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Page Not Found
-            </h2>
-            <p className="text-xl text-slate-600 leading-relaxed">
-              Sorry, we couldn&apos;t find the page you&apos;re looking for. 
-              The page might have been moved, deleted, or the URL might be incorrect.
-            </p>
-          </motion.div>
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+            Page Not Found
+          </h1>
+          <p className="text-xl text-slate-600 mb-8 leading-relaxed">
+            Sorry, we couldn&apos;t find the page you&apos;re looking for. 
+            It might have been moved, deleted, or you entered the wrong URL.
+          </p>
 
           {/* Action Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <Button
-              asChild
-              size="lg"
-              className="bg-custom-yellow hover:bg-custom-yellow-hover"
+          <div className="space-y-4 mb-12">
+            <div 
+              className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <Link href="/">
+              <Link
+                href="/"
+                className="inline-flex items-center px-8 py-4 bg-custom-yellow hover:bg-custom-yellow-hover text-slate-900 font-semibold rounded-lg transition-colors duration-300"
+              >
                 <Home className="mr-2 h-5 w-5" />
-                Go Home
+                Back to Home
               </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              onClick={() => window.history.back()}
-            >
-              <button>
-                <ArrowLeft className="mr-2 h-5 w-5" />
-                Go Back
-              </button>
-            </Button>
-          </motion.div>
-
-          {/* Help Text */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="mt-12 pt-8 border-t border-slate-200"
-          >
-            <p className="text-slate-500 mb-4">
-              Need help finding what you&apos;re looking for?
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <Link href="/services" className="text-custom-yellow hover:text-custom-yellow-hover hover:underline">
-                Our Services
-              </Link>
-              <Link href="/about" className="text-custom-yellow hover:text-custom-yellow-hover hover:underline">
-                About Us
-              </Link>
-              <Link href="/projects" className="text-custom-yellow hover:text-custom-yellow-hover hover:underline">
-                Projects
-              </Link>
-              <Link href="/contact" className="text-custom-yellow hover:text-custom-yellow-hover hover:underline">
-                Contact
+              <Link
+                href="/services"
+                className="inline-flex items-center px-8 py-4 border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold rounded-lg transition-colors duration-300"
+              >
+                <Search className="mr-2 h-5 w-5" />
+                Browse Services
               </Link>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="border-t border-slate-200 pt-8">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">
+              Popular Pages
+            </h3>
+            <div className="flex flex-wrap justify-center gap-4 text-sm">
+              <Link href="/about" className="text-custom-yellow hover:text-custom-yellow-hover transition-colors">
+                About Us
+              </Link>
+              <Link href="/services" className="text-custom-yellow hover:text-custom-yellow-hover transition-colors">
+                Our Services  
+              </Link>
+              <Link href="/projects" className="text-custom-yellow hover:text-custom-yellow-hover transition-colors">
+                Projects
+              </Link>
+              <Link href="/machines" className="text-custom-yellow hover:text-custom-yellow-hover transition-colors">
+                Our Machines
+              </Link>
+              <Link href="/contact" className="text-custom-yellow hover:text-custom-yellow-hover transition-colors">
+                Contact Us
+              </Link>
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div className="mt-8 p-6 bg-white rounded-lg shadow-sm border border-slate-200">
+            <p className="text-slate-600 mb-3">
+              Need help? Get in touch with our team:
+            </p>
+            <div className="flex items-center justify-center space-x-4">
+              <a 
+                href="tel:01636812227"
+                className="flex items-center text-custom-yellow hover:text-custom-yellow-hover transition-colors"
+              >
+                <Phone className="h-4 w-4 mr-2" />
+                01636 812227
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-
-
-
