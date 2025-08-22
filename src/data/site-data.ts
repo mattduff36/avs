@@ -38,7 +38,8 @@ export const siteData = {
     },
     {
       label: "Latest News",
-      href: "/news",
+      href: "https://www.facebook.com/p/A-V-Squires-Plant-Co-Limited-100063551614762/",
+      external: true,
     },
     {
       label: "Contact",

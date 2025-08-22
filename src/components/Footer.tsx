@@ -10,7 +10,7 @@ import { siteData } from "@/data/site-data";
 export function Footer() {
   return (
     <footer className="bg-slate-900 text-white">
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 pt-5 pb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <motion.div
@@ -51,13 +51,25 @@ export function Footer() {
             <h3 className="font-semibold text-lg">Quick Links</h3>
             <nav className="flex flex-col space-y-2">
               {siteData.navigation.slice(0, 6).map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="text-slate-300 hover:text-white transition-colors text-sm"
-                >
-                  {item.label}
-                </Link>
+                item.external ? (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-300 hover:text-white transition-colors text-sm"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="text-slate-300 hover:text-white transition-colors text-sm"
+                  >
+                    {item.label}
+                  </Link>
+                )
               ))}
             </nav>
           </motion.div>

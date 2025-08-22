@@ -88,12 +88,23 @@ export function Header() {
                 {siteData.navigation.map((item) => (
                   <NavigationMenuItem key={item.label}>
                     <NavigationMenuLink asChild>
-                      <Link
-                        href={item.href}
-                        className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-                      >
-                        {item.label}
-                      </Link>
+                      {item.external ? (
+                        <a
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                        >
+                          {item.label}
+                        </a>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                        >
+                          {item.label}
+                        </Link>
+                      )}
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}
@@ -111,13 +122,25 @@ export function Header() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <nav className="flex flex-col space-y-4 mt-8">
                 {siteData.navigation.map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="text-lg font-medium text-slate-700 hover:text-slate-900 block py-2"
-                  >
-                    {item.label}
-                  </Link>
+                  item.external ? (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-lg font-medium text-slate-700 hover:text-slate-900 block py-2"
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className="text-lg font-medium text-slate-700 hover:text-slate-900 block py-2"
+                    >
+                      {item.label}
+                    </Link>
+                  )
                 ))}
               </nav>
             </SheetContent>

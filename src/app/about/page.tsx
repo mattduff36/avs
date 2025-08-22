@@ -121,43 +121,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Contact CTA */}
-      <section className="py-20 bg-slate-900 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to Work With Us?
-            </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Get in touch today to discuss your project requirements and see how 
-              our decades of experience can benefit you.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.a
-                href="/contact"
-                className="inline-flex items-center justify-center px-8 py-4 bg-custom-yellow hover:bg-custom-yellow-hover text-slate-900 font-semibold rounded-lg transition-colors duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Get In Touch
-              </motion.a>
-              <motion.a
-                href="/services"
-                className="inline-flex items-center justify-center px-8 py-4 border border-white text-white hover:bg-white hover:text-slate-900 font-semibold rounded-lg transition-colors duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                View Our Services
-              </motion.a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+
     </div>
   );
 }

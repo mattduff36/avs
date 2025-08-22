@@ -3,11 +3,10 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-import { ArrowRight, Phone, X, ChevronDown } from "lucide-react";
+import { X, ChevronDown } from "lucide-react";
 import { siteData } from "@/data/site-data";
 
 export default function ServicesPage() {
@@ -259,50 +258,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-slate-900 text-white">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to Start Your Project?
-            </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-              Contact us today for a free consultation and professional service. Our expert team is ready 
-              to help bring your construction project to life with our decades of experience.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button
-                asChild
-                size="lg"
-                className="bg-custom-yellow hover:bg-custom-yellow-hover px-8 py-6 text-lg"
-              >
-                <Link href="/contact">
-                  Get In Touch
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              
-              <div className="flex items-center text-lg">
-                <span className="mr-4 text-gray-300">or call us directly:</span>
-                <a
-                  href={`tel:${siteData.contact.phone}`}
-                  className="flex items-center text-custom-yellow text-custom-yellow-hover-400 font-semibold transition-colors"
-                >
-                  <Phone className="mr-2 h-5 w-5" />
-                  {siteData.contact.phone}
-                </a>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+
     </div>
   );
 }

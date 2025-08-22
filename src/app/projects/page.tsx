@@ -550,34 +550,7 @@ export default function ProjectsPage() {
 
 
 
-          {/* CTA Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center bg-slate-900 rounded-2xl p-8 md:p-12 text-white"
-          >
-            <h3 className="text-3xl font-bold mb-4">
-              Ready to Start Your Project?
-            </h3>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              No project is too big or too small. Contact us today to discuss your requirements 
-              and see how we can help.
-            </p>
-            <div className="flex justify-center">
-              <Button
-                asChild
-                size="lg"
-                className="bg-custom-yellow hover:bg-custom-yellow-hover text-slate-900 font-semibold"
-              >
-                <Link href="/contact">
-                  Get in Touch
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
-          </motion.div>
+
         </div>
       </section>
     </div>
