@@ -43,14 +43,14 @@ export default function AboutPage() {
       {/* Company Story */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="max-w-4xl mx-auto">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 text-center">
                 <span className="text-custom-yellow">ESTABLISHED SINCE 1971</span>
               </h2>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
@@ -68,22 +68,6 @@ export default function AboutPage() {
               <p className="text-lg text-slate-600 leading-relaxed">
                 After the sad passing of Philip in February 2009, Robert took sole responsibility for the company. He is assisted by a highly-qualified and experienced team and they continue to drive the company forward.
               </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <div className="bg-custom-yellow rounded-2xl p-8 shadow-lg">
-                <h3 className="text-3xl font-bold text-white text-center mb-4">Quality & Excellence</h3>
-                <p className="text-white/90 text-center text-lg leading-relaxed">
-                  Committed to delivering exceptional results through professional expertise, 
-                  modern equipment, and dedicated service across the East Midlands region.
-                </p>
-              </div>
             </motion.div>
           </div>
         </div>
