@@ -203,7 +203,7 @@ export default function ContactPage() {
                                   href={info.link}
                                   className={`inline-block px-6 py-3 rounded-lg bg-gradient-to-r ${info.bgGradient} border border-gray-200 hover:shadow-md transition-all duration-300 group-hover:border-slate-400 text-slate-700 hover:text-slate-900`}
                                 >
-                                  <span className="text-lg font-medium">{info.details}</span>
+                                  <span className={`font-medium ${index === 0 ? 'text-2xl' : 'text-lg'}`}>{info.details}</span>
                                 </a>
                               )}
                             </div>

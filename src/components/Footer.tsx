@@ -3,14 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { siteData } from "@/data/site-data";
 
 export function Footer() {
   return (
     <footer className="bg-slate-900 text-white">
-      <div className="container mx-auto px-4 pt-5 pb-20">
+      <div className="container mx-auto px-4 pt-5 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <motion.div
@@ -115,13 +115,14 @@ export function Footer() {
                 <span className="text-sm">{siteData.contact.emails[0]}</span>
               </div>
               <div className="flex items-center space-x-3">
+                <Mail className="h-4 w-4 text-custom-yellow" />
+                <span className="text-sm">{siteData.contact.emails[1]}</span>
+              </div>
+              <div className="flex items-center space-x-3">
                 <MapPin className="h-4 w-4 text-custom-yellow" />
                 <span className="text-sm">Vivienne House, Racecourse Road Southwell, Nottinghamshire, NG25 0TX</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Clock className="h-4 w-4 text-custom-yellow" />
-                <span className="text-sm">24/7 Emergency Service</span>
-              </div>
+
             </div>
           </motion.div>
         </div>

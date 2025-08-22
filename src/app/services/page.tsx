@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,41 @@ export default function ServicesPage() {
   const [expandedService, setExpandedService] = useState<string | null>(null);
   const [animatingService, setAnimatingService] = useState<string | null>(null);
 
+  // Handle URL hash on page load and hash changes
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && siteData.services.some(service => service.id === hash)) {
+        // Small delay to ensure page is fully loaded
+        setTimeout(() => {
+          setExpandedService(hash);
+          
+          // Scroll to the service card
+          const element = document.getElementById(hash);
+          if (element) {
+            const headerHeight = 120;
+            const elementPosition = element.offsetTop - headerHeight;
+            
+            window.scrollTo({
+              top: elementPosition,
+              behavior: 'smooth'
+            });
+          }
+        }, 500);
+      }
+    };
+
+    // Handle initial load
+    handleHashChange();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+    
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
+
   const toggleExpanded = (serviceId: string) => {
     const wasExpanded = expandedService === serviceId;
     
@@ -22,6 +57,15 @@ export default function ServicesPage() {
     // Hide content immediately, then change state after brief delay
     setTimeout(() => {
       setExpandedService(wasExpanded ? null : serviceId);
+      
+      // Update URL hash
+      if (wasExpanded) {
+        // Remove hash if closing
+        window.history.pushState(null, '', window.location.pathname);
+      } else {
+        // Add hash if expanding
+        window.history.pushState(null, '', `#${serviceId}`);
+      }
     }, 100);
     
     // Show content again after animation completes

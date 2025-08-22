@@ -203,8 +203,8 @@ export const siteData = {
   ],
   stats: [
     {
-      number: "Expert",
-      label: "Professional Service"
+      number: "50+",
+      label: "Years Experience"
     },
     {
       number: "75+",
@@ -212,11 +212,11 @@ export const siteData = {
     },
     {
       number: "40+",
-      label: "Machines Available"
+      label: "Machines"
     },
     {
-      number: "24/7",
-      label: "Service Available"
+      number: "1000+",
+      label: "Projects (Big and Small)"
     }
   ]
 };
