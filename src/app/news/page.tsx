@@ -5,7 +5,7 @@ import { Facebook } from "lucide-react";
 
 export default function NewsPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[calc(100dvh-200px)] lg:min-h-[calc(100dvh-437px)] flex flex-col">
       {/* Coming Soon Section */}
       <section className="pt-20 pb-10 bg-gradient-to-br from-slate-50 to-white">
         <div className="container mx-auto px-4">

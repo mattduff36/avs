@@ -11,7 +11,8 @@ export function Footer() {
   return (
     <footer className="bg-slate-900 text-white">
       <div className="container mx-auto px-4 pt-5 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Main content - hidden on mobile */}
+        <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -127,7 +128,8 @@ export function Footer() {
           </motion.div>
         </div>
 
-        <Separator className="my-8 bg-slate-700" />
+        {/* Separator - hidden on mobile */}
+        <Separator className="hidden md:block my-8 bg-slate-700" />
 
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">

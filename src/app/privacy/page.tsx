@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react";
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white">
+    <div className="min-h-[calc(100dvh-200px)] lg:min-h-[calc(100dvh-437px)] flex flex-col bg-gradient-to-br from-slate-50 to-white">
       {/* Header */}
       <section className="pt-20 pb-10 bg-slate-900 text-white">
         <div className="container mx-auto px-4">

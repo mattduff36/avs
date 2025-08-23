@@ -86,7 +86,7 @@ export default function ServicesPage() {
     }, 600);
   };
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[calc(100dvh-200px)] lg:min-h-[calc(100dvh-437px)] flex flex-col">
       {/* Hero Section */}
       <section className="relative py-20 bg-slate-900 text-white overflow-hidden">
         <div className="absolute inset-0">
