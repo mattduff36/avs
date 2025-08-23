@@ -74,7 +74,7 @@ export default function MachinesPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-200px)] lg:min-h-[calc(100vh-437px)] flex flex-col">
+    <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative py-20 bg-slate-900 text-white overflow-hidden">
         <div className="absolute inset-0">
