@@ -31,7 +31,7 @@ export function HeroSlideshow() {
 
   return (
     <div className="relative w-full h-[600px] overflow-hidden">
-      <AnimatePresence mode="crossfade">
+      <AnimatePresence mode="wait">
         <motion.div
           key={currentImageIndex}
           initial={{ opacity: 0 }}
