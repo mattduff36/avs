@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { siteData } from "@/data/site-data";
+import { HeroSlideshow } from "@/components/HeroSlideshow";
 
 export function HeroSection() {
 
@@ -107,17 +108,10 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="relative lg:col-start-3"
           >
-            {/* Main Image */}
+            {/* Main Image - Slideshow */}
             <div className="relative group">
-                             <div className="relative rounded-2xl overflow-hidden shadow-2xl transform rotate-1 lg:rotate-2 transition-transform duration-500">
-                <Image
-                  src="/images/hero-background.jpg"
-                  alt="A&V Squires Construction Equipment"
-                  width={600}
-                  height={700}
-                  className="object-cover w-full h-[600px]"
-                  priority
-                />
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl transform rotate-1 lg:rotate-2 transition-transform duration-500">
+                <HeroSlideshow />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
               </div>
 
