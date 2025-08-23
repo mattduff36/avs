@@ -4,11 +4,26 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Award, Users, Truck, Hammer } from "lucide-react";
 import { siteData } from "@/data/site-data";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 
 export function HeroSection() {
+  // Function to get icon component based on icon name
+  const getIconComponent = (iconName: string) => {
+    switch (iconName) {
+      case 'Award':
+        return <Award className="h-8 w-8" />;
+      case 'Users':
+        return <Users className="h-8 w-8" />;
+      case 'Truck':
+        return <Truck className="h-8 w-8" />;
+      case 'Hammer':
+        return <Hammer className="h-8 w-8" />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <section className="relative min-h-screen overflow-hidden">
@@ -150,7 +165,8 @@ export function HeroSection() {
                 transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
                 className="text-center"
               >
-                <div className="bg-custom-yellow text-slate-900 text-3xl md:text-4xl font-bold mb-2 px-4 py-2 rounded-lg inline-block">
+                <div className="bg-custom-yellow text-[#45575B] text-2xl md:text-3xl font-bold mb-2 px-3 py-1.5 rounded-lg inline-flex items-center justify-center gap-2">
+                  {getIconComponent(stat.icon)}
                   {stat.number}
                 </div>
                 <div className="text-sm md:text-base text-slate-600 font-medium">

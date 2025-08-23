@@ -204,19 +204,23 @@ export const siteData = {
   stats: [
     {
       number: "50+",
-      label: "Years Experience"
+      label: "Years Experience",
+      icon: "Award"
     },
     {
       number: "75+",
-      label: "Employees"
+      label: "Employees",
+      icon: "Users"
     },
     {
       number: "40+",
-      label: "Machines"
+      label: "Machines",
+      icon: "Truck"
     },
     {
       number: "1000+",
-      label: "Projects (Big and Small)"
+      label: "Projects (Big and Small)",
+      icon: "Hammer"
     }
   ]
 };
