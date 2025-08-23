@@ -33,6 +33,7 @@ export function HeroSection() {
           src="/images/transport-haulage.jpg"
           alt="A&V Squires Transport Fleet"
           fill
+          sizes="100vw"
           className="object-cover"
           priority
         />
@@ -143,6 +144,7 @@ export function HeroSection() {
                   width={100}
                   height={130}
                   className="drop-shadow-lg"
+                  style={{ height: 'auto' }}
                 />
               </motion.div>
             </div>
@@ -154,7 +156,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.0 }}
-          className="mt-20 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/50 shadow-lg p-8"
+          className="mt-10 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/50 shadow-lg p-8"
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {siteData.stats.map((stat, index) => (
@@ -165,7 +167,7 @@ export function HeroSection() {
                 transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
                 className="text-center"
               >
-                <div className="bg-custom-yellow text-[#45575B] text-2xl md:text-3xl font-bold mb-2 px-3 py-1.5 rounded-lg inline-flex items-center justify-center gap-2">
+                <div className="bg-custom-yellow text-[#45575B] text-lg md:text-xl font-bold mb-2 px-3 py-1.5 rounded-lg inline-flex items-center justify-center gap-2">
                   {getIconComponent(stat.icon)}
                   {stat.number}
                 </div>

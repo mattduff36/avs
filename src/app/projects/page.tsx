@@ -118,6 +118,7 @@ export default function ProjectsPage() {
             src="/images/saint-gobain-carpark.jpg"
             alt="Our Projects"
             fill
+            sizes="100vw"
             className="object-cover opacity-20"
           />
         </div>
@@ -211,6 +212,7 @@ export default function ProjectsPage() {
                       src={project.image}
                       alt={project.title}
                       fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
@@ -508,6 +510,7 @@ export default function ProjectsPage() {
                                 src={project.image}
                                 alt={project.title}
                                 fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 className="object-cover group-hover:scale-110 transition-transform duration-700"
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />

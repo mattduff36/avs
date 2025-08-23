@@ -89,6 +89,7 @@ export function Header() {
               width={50}
               height={50}
               className="rounded-md"
+              style={{ height: 'auto' }}
             />
             <div className="hidden md:block">
               <div className="font-bold text-xl text-slate-900">

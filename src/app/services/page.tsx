@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ImageSkeleton } from "@/components/ui/image-skeleton";
+
 
 import { X, ChevronDown } from "lucide-react";
 import { siteData } from "@/data/site-data";
@@ -12,6 +14,7 @@ import { siteData } from "@/data/site-data";
 export default function ServicesPage() {
   const [expandedService, setExpandedService] = useState<string | null>(null);
   const [animatingService, setAnimatingService] = useState<string | null>(null);
+  const [imageLoadingStates, setImageLoadingStates] = useState<Record<string, boolean>>({});
 
   // iOS viewport height fix
   useEffect(() => {
@@ -29,6 +32,14 @@ export default function ServicesPage() {
       window.removeEventListener('orientationchange', setViewportHeight);
     };
   }, []);
+
+  const handleImageLoad = (serviceId: string) => {
+    setImageLoadingStates(prev => ({ ...prev, [serviceId]: false }));
+  };
+
+  const handleImageStartLoad = (serviceId: string) => {
+    setImageLoadingStates(prev => ({ ...prev, [serviceId]: true }));
+  };
 
   // Handle URL hash on page load and hash changes
   useEffect(() => {
@@ -137,6 +148,7 @@ export default function ServicesPage() {
             src="/images/transport-haulage.jpg"
             alt="Our Services"
             fill
+            sizes="100vw"
             className="object-cover opacity-20"
           />
         </div>
@@ -164,7 +176,7 @@ export default function ServicesPage() {
       <section className="py-20 bg-gradient-to-br from-slate-50 to-gray-100">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
-            {siteData.services.map((service) => {
+            {siteData.services.map((service, index) => {
               const isExpanded = expandedService === service.id;
               const isAnimating = animatingService === service.id;
               const showContent = !isAnimating;
@@ -222,13 +234,21 @@ export default function ServicesPage() {
                           {/* Image and Description Section */}
                           <div className="mb-8">
                             {/* Image floated left on desktop, stacked on mobile */}
-                            <div className="float-none lg:float-left lg:w-80 lg:h-60 xl:w-96 xl:h-72 lg:mr-8 lg:mb-4 mb-6">
+                            <div className="float-none lg:float-left lg:w-80 lg:h-60 xl:w-96 xl:h-72 lg:mr-8 lg:mb-4 mb-6 relative">
+                              {imageLoadingStates[service.id] && (
+                                <ImageSkeleton 
+                                  aspectRatio="wide" 
+                                  className="w-full h-64 lg:h-full absolute inset-0 z-20"
+                                />
+                              )}
                               <Image
                                 src={service.image}
                                 alt={service.name}
                                 width={400}
                                 height={300}
-                                className="w-full h-64 lg:h-full object-cover rounded-lg shadow-lg"
+                                className="w-full h-64 lg:h-full object-cover rounded-lg shadow-lg relative z-10"
+                                onLoadStart={() => handleImageStartLoad(service.id)}
+                                onLoad={() => handleImageLoad(service.id)}
                               />
                             </div>
 
@@ -270,7 +290,9 @@ export default function ServicesPage() {
                             src={service.image}
                             alt={service.name}
                             fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             className="object-cover group-hover:scale-110 transition-transform duration-700"
+                            priority={index === 0}
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 

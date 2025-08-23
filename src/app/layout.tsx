@@ -3,29 +3,70 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from "@vercel/analytics/react";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "A&V Squires Plant Company LTD - Civil Engineering & Plant Hire | East Midlands",
-  description: "Leading civil engineering, plant hire, and contract earthmoving company in the East Midlands. Decades of proven expertise providing high-quality construction services nationwide.",
-  keywords: "A&V Squires, civil engineering, plant hire, earthmoving, construction, East Midlands, transport, haulage, HIAB hire",
+  title: "A&V Squires Plant Co Limited - Civil Engineering & Plant Hire",
+  description: "Professional civil engineering and plant hire services in Nottinghamshire. Over 50 years of experience in construction, earthmoving, and specialized transport.",
+  keywords: "civil engineering, plant hire, construction, Nottinghamshire, earthmoving, transport",
+  authors: [{ name: "A&V Squires Plant Co Limited" }],
+  creator: "A&V Squires Plant Co Limited",
+  publisher: "A&V Squires Plant Co Limited",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL("https://avsquires.co.uk"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "A&V Squires Plant Co Limited - Civil Engineering & Plant Hire",
+    description: "Professional civil engineering and plant hire services in Nottinghamshire. Over 50 years of experience in construction, earthmoving, and specialized transport.",
+    url: "https://avsquires.co.uk",
+    siteName: "A&V Squires Plant Co Limited",
+    locale: "en_GB",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "A&V Squires Plant Co Limited - Civil Engineering & Plant Hire",
+    description: "Professional civil engineering and plant hire services in Nottinghamshire. Over 50 years of experience in construction, earthmoving, and specialized transport.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: [
-      { url: '/images/favicon/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/images/favicon/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/images/favicon/favicon.ico', sizes: 'any' }
+      { url: "/images/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/images/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
     apple: [
-      { url: '/images/favicon/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
+      { url: "/images/favicon/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
     other: [
-      { url: '/images/favicon/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/images/favicon/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' }
-    ]
+      { rel: "mask-icon", url: "/images/favicon/safari-pinned-tab.svg", color: "#F1D64A" },
+    ],
   },
-  manifest: '/images/favicon/site.webmanifest',
+  manifest: "/images/favicon/site.webmanifest",
+  themeColor: "#F1D64A",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    viewportFit: "cover",
+  },
 };
 
 export default function RootLayout({
@@ -34,17 +75,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-      </head>
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={inter.className}>
-        <Header />
-        <main className="pt-24">
-          {children}
-        </main>
-        <Footer />
-        <Analytics />
+        <ErrorBoundary>
+          <Header />
+          <main className="min-h-screen pt-24">
+            {children}
+          </main>
+          <Footer />
+          <Analytics />
+        </ErrorBoundary>
       </body>
     </html>
   );

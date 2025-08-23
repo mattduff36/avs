@@ -2,9 +2,12 @@
 
 import { motion } from "framer-motion";
 import { Facebook } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 export default function NewsPage() {
+  const [isExternalLinkLoading, setIsExternalLinkLoading] = useState(false);
+
   // iOS viewport height fix
   useEffect(() => {
     const setViewportHeight = () => {
@@ -22,8 +25,27 @@ export default function NewsPage() {
     };
   }, []);
 
+  const handleExternalLinkClick = (url: string) => {
+    setIsExternalLinkLoading(true);
+    // Simulate loading time for external link
+    setTimeout(() => {
+      window.open(url, '_blank', 'noopener,noreferrer');
+      setIsExternalLinkLoading(false);
+    }, 500);
+  };
+
   return (
     <div className="ios-fix-alt flex flex-col">
+      {/* Loading overlay for external links */}
+      {isExternalLinkLoading && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 flex items-center space-x-3">
+            <LoadingSpinner size="md" color="slate" />
+            <span className="text-slate-900">Opening Facebook page...</span>
+          </div>
+        </div>
+      )}
+
       {/* Coming Soon Section */}
       <section className="pt-20 pb-10 bg-gradient-to-br from-slate-50 to-white">
         <div className="container mx-auto px-4">
@@ -77,6 +99,10 @@ export default function NewsPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleExternalLinkClick("https://www.facebook.com/p/A-V-Squires-Plant-Co-Limited-100063551614762/");
+                  }}
                 >
                   Visit Our Facebook Page
                 </a>

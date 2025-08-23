@@ -45,6 +45,7 @@ export function HeroSlideshow() {
               src={imageSrc}
               alt={`Hero slideshow image ${index + 1}`}
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className={`object-cover transition-transform duration-[1500ms] ease-in-out ${
                 index === currentImageIndex ? tiltDirection : 'rotate-0'
               }`}

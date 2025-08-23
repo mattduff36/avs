@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://avsquires.co.uk/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow admin areas (if any)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /temp-icons/
+
+# Allow important pages
+Allow: /
+Allow: /about
+Allow: /services
+Allow: /machines
+Allow: /projects
+Allow: /contact
+Allow: /news
+Allow: /privacy
+Allow: /terms

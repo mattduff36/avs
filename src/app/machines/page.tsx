@@ -5,12 +5,13 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Wrench, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useState, useEffect } from "react";
 
 const machinesData = [
   {
     id: 1,
-    title: "KOMATSU D61 PXi",
+    title: "Komatsu D61 PXi",
     description: "The Intelligent Machine Control (iMC) on the D61 improves efficiency and reduces cost to our customers in any application. The iMC allows automated operation from heavy dozing to fine grading. Our Komatsu D61 PXi dozers are available for contracted works and short or long-term hire.",
     image: "/images/komatsu-d61-pxi.jpg",
     features: ["Intelligent Machine Control", "Heavy dozing to fine grading", "Available for hire"],
@@ -18,7 +19,7 @@ const machinesData = [
   },
   {
     id: 2,
-    title: "KOMATSU'S INTELLIGENT MACHINE CONTROL",
+    title: "Komatsu's Intelligent Machine Control",
     description: "We have a choice of Komatsu excavators with Komatsu's intelligent machine control technology, meaning whatever the job we will have the right machine to ensure our customers projects are completed to highest accuracy and in a fraction of the time compared to conventional methods. Onboard weighing will optimize loading, ensuring every truck load is road legal and filled to its full capacity.",
     image: "/images/komatsu-intelligent-control.jpg",
     features: ["Multiple excavator options", "Highest accuracy", "Onboard weighing system"],
@@ -60,6 +61,7 @@ const machinesData = [
 
 export default function MachinesPage() {
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+  const [isModalLoading, setIsModalLoading] = useState(false);
 
   // iOS viewport height fix
   useEffect(() => {
@@ -79,6 +81,7 @@ export default function MachinesPage() {
   }, []);
 
   const openModal = (imageSrc: string, imageAlt: string) => {
+    setIsModalLoading(true);
     setSelectedImage({ src: imageSrc, alt: imageAlt });
     // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
@@ -86,6 +89,7 @@ export default function MachinesPage() {
 
   const closeModal = () => {
     setSelectedImage(null);
+    setIsModalLoading(false);
     // Restore body scroll
     document.body.style.overflow = 'unset';
   };
@@ -99,6 +103,7 @@ export default function MachinesPage() {
             src="/images/komatsu-d61-pxi.jpg"
             alt="Our Machines"
             fill
+            sizes="100vw"
             className="object-cover opacity-20"
           />
         </div>
@@ -200,6 +205,7 @@ export default function MachinesPage() {
                             src={machine.image}
                             alt={machine.title}
                             fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-cover transition-transform duration-700 group-hover:scale-110"
                           />
                           
@@ -270,6 +276,11 @@ export default function MachinesPage() {
 
               {/* Image Container */}
               <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-slate-900">
+                {isModalLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <LoadingSpinner size="xl" color="white" />
+                  </div>
+                )}
                 <Image
                   src={selectedImage.src}
                   alt={selectedImage.alt}
@@ -277,6 +288,7 @@ export default function MachinesPage() {
                   className="object-contain"
                   sizes="100vw"
                   priority
+                  onLoad={() => setIsModalLoading(false)}
                 />
               </div>
 
