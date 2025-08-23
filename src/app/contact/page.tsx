@@ -1,7 +1,32 @@
+"use client";
+
 import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { useEffect } from "react";
 
 export default function ContactPage() {
+  // iOS viewport height fix
+  useEffect(() => {
+    const setViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+    
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+    };
+  }, []);
+
+  // Scroll to top when page loads
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const contactInfo = [
     {
       icon: <Phone className="h-8 w-8" />,
@@ -38,7 +63,7 @@ export default function ContactPage() {
   ];
 
   return (
-    <div className="min-h-[calc(100dvh-200px)] lg:min-h-[calc(100dvh-437px)] flex flex-col">
+    <div className="ios-fix-alt flex flex-col">
       {/* Hero Section */}
       <section className="relative py-20 bg-slate-900 text-white overflow-hidden">
         <div className="absolute inset-0">

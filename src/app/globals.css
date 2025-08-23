@@ -152,6 +152,36 @@ html {
   scroll-behavior: smooth;
 }
 
+/* iOS Safari mobile-only fixes */
+@media (max-width: 1023px) {
+  html { 
+    height: -webkit-fill-available; 
+  }
+  
+  .ios-stable-viewport {
+    min-height: 100vh; /* fallback */
+    min-height: 100svh; /* stable viewport on mobile */
+    min-height: -webkit-fill-available; /* old iOS fallback */
+  }
+}
+
+/* Alternative iOS fix using CSS custom properties */
+.ios-fix-alt {
+  --vh: 1vh;
+}
+
+@media (max-width: 1023px) {
+  .ios-fix-alt {
+    min-height: calc(var(--vh, 1vh) * 100 - 200px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .ios-fix-alt {
+    min-height: calc(var(--vh, 1vh) * 100 - 437px);
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

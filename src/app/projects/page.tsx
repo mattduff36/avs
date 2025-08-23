@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,23 @@ import { ArrowRight, MapPin, PoundSterling, X, ChevronDown } from "lucide-react"
 export default function ProjectsPage() {
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
   const [animatingProject, setAnimatingProject] = useState<string | null>(null);
+
+  // iOS viewport height fix
+  useEffect(() => {
+    const setViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+    
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+    };
+  }, []);
 
   const toggleExpanded = (projectId: string) => {
     const wasExpanded = expandedProject === projectId;
@@ -93,7 +110,7 @@ export default function ProjectsPage() {
   const otherProjects = projects.filter(project => !project.featured);
 
   return (
-    <div className="min-h-[calc(100dvh-200px)] lg:min-h-[calc(100dvh-437px)] flex flex-col">
+    <div className="ios-fix-alt flex flex-col">
       {/* Hero Section */}
       <section className="relative py-20 bg-slate-900 text-white overflow-hidden">
         <div className="absolute inset-0">

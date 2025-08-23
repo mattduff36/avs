@@ -23,7 +23,7 @@ export function Footer() {
           >
             <div className="flex items-center space-x-3">
               <Image
-                src="/images/logo.jpg"
+                src="/images/logo-yellow-digger.png"
                 alt="A&V Squires Logo"
                 width={40}
                 height={40}
@@ -119,9 +119,9 @@ export function Footer() {
                 <Mail className="h-4 w-4 text-custom-yellow" />
                 <span className="text-sm">{siteData.contact.emails[1]}</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <MapPin className="h-4 w-4 text-custom-yellow" />
-                <span className="text-sm">Vivienne House, Racecourse Road Southwell, Nottinghamshire, NG25 0TX</span>
+              <div className="flex items-start space-x-3">
+                <MapPin className="h-4 w-4 text-custom-yellow mt-0.5 flex-shrink-0" />
+                <span className="text-sm leading-relaxed">Vivienne House,<br />Racecourse Road Southwell,<br />Nottinghamshire, NG25 0TX</span>
               </div>
 
             </div>

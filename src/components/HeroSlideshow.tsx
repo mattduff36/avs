@@ -30,22 +30,29 @@ export function HeroSlideshow() {
 
   return (
     <div className="relative w-full h-[600px] overflow-hidden">
-      {slideshowImages.map((imageSrc, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 transition-opacity duration-[1500ms] ease-in-out ${
-            index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <Image
-            src={imageSrc}
-            alt={`Hero slideshow image ${index + 1}`}
-            fill
-            className="object-cover"
-            priority={index === 0}
-          />
-        </div>
-      ))}
+      {slideshowImages.map((imageSrc, index) => {
+        // Alternate tilt direction based on image index
+        const tiltDirection = index % 2 === 0 ? 'rotate-1' : '-rotate-1';
+        
+        return (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-all duration-[1500ms] ease-in-out ${
+              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <Image
+              src={imageSrc}
+              alt={`Hero slideshow image ${index + 1}`}
+              fill
+              className={`object-cover transition-transform duration-[1500ms] ease-in-out ${
+                index === currentImageIndex ? tiltDirection : 'rotate-0'
+              }`}
+              priority={index === 0}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }

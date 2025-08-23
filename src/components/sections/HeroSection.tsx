@@ -150,7 +150,7 @@ export function HeroSection() {
                 transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
                 className="text-center"
               >
-                <div className="text-3xl md:text-4xl font-bold text-custom-yellow mb-2">
+                <div className="bg-custom-yellow text-slate-900 text-3xl md:text-4xl font-bold mb-2 px-4 py-2 rounded-lg inline-block">
                   {stat.number}
                 </div>
                 <div className="text-sm md:text-base text-slate-600 font-medium">

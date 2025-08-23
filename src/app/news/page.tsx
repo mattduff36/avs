@@ -2,10 +2,28 @@
 
 import { motion } from "framer-motion";
 import { Facebook } from "lucide-react";
+import { useEffect } from "react";
 
 export default function NewsPage() {
+  // iOS viewport height fix
+  useEffect(() => {
+    const setViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+    
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+    };
+  }, []);
+
   return (
-    <div className="min-h-[calc(100dvh-200px)] lg:min-h-[calc(100dvh-437px)] flex flex-col">
+    <div className="ios-fix-alt flex flex-col">
       {/* Coming Soon Section */}
       <section className="pt-20 pb-10 bg-gradient-to-br from-slate-50 to-white">
         <div className="container mx-auto px-4">

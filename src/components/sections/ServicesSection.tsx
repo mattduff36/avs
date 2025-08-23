@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ArrowRight, Users, Wrench, FolderOpen, Truck } from "lucide-react";
 
 export function ServicesSection() {
@@ -36,7 +37,7 @@ export function ServicesSection() {
       image: "/images/tarmac-major-civils.jpg",
       icon: FolderOpen,
       link: "/projects",
-      features: ["1000+ Projects Completed", "Major Infrastructure", "Commercial Developments", "Specialised Operations"]
+      features: ["1000+ Projects Completed", "Major Infrastructure", "Commercial Developments", "Smaller Projects"]
     },
     {
       id: "machines",
@@ -144,17 +145,17 @@ export function ServicesSection() {
               From major infrastructure developments to specialised smaller operations, our expert team 
               provides the same high-quality service regardless of project size.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact">
-                <button className="bg-custom-yellow hover:bg-custom-yellow-hover text-slate-900 font-semibold px-8 py-4 rounded-lg transition-all duration-300">
-                  Get In Touch
-                </button>
-              </Link>
-              <Link href="/projects">
-                <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-slate-900 transition-all duration-300">
-                  View Our Projects
-                </button>
-              </Link>
+            <div className="flex justify-center">
+              <Button
+                asChild
+                size="lg"
+                className="bg-custom-yellow hover:bg-custom-yellow-hover text-slate-900 font-semibold"
+              >
+                <Link href="/contact">
+                  Get in Touch
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
             </div>
           </div>
         </motion.div>

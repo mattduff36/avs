@@ -3,10 +3,28 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useEffect } from "react";
 
 export default function TermsOfServicePage() {
+  // iOS viewport height fix
+  useEffect(() => {
+    const setViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+    
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+    };
+  }, []);
+
   return (
-    <div className="min-h-[calc(100dvh-200px)] lg:min-h-[calc(100dvh-437px)] flex flex-col bg-gradient-to-br from-slate-50 to-white">
+    <div className="ios-fix-alt flex flex-col bg-gradient-to-br from-slate-50 to-white">
       {/* Header */}
       <section className="pt-20 pb-10 bg-slate-900 text-white">
         <div className="container mx-auto px-4">

@@ -2,15 +2,30 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-
-
+import { useEffect } from "react";
 
 import { siteData } from "@/data/site-data";
 
 export default function AboutPage() {
+  // iOS viewport height fix
+  useEffect(() => {
+    const setViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+    
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+    };
+  }, []);
 
   return (
-    <div className="min-h-[calc(100dvh-200px)] lg:min-h-[calc(100dvh-437px)] flex flex-col">
+    <div className="ios-fix-alt flex flex-col">
       {/* Hero Section */}
       <section className="relative py-20 bg-slate-900 text-white overflow-hidden">
         <div className="absolute inset-0">

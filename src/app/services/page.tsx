@@ -13,6 +13,23 @@ export default function ServicesPage() {
   const [expandedService, setExpandedService] = useState<string | null>(null);
   const [animatingService, setAnimatingService] = useState<string | null>(null);
 
+  // iOS viewport height fix
+  useEffect(() => {
+    const setViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+    
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+    };
+  }, []);
+
   // Handle URL hash on page load and hash changes
   useEffect(() => {
     const handleHashChange = () => {
@@ -43,9 +60,35 @@ export default function ServicesPage() {
     // Listen for hash changes
     window.addEventListener('hashchange', handleHashChange);
     
+    // Also listen for popstate (back/forward navigation)
+    window.addEventListener('popstate', handleHashChange);
+    
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handleHashChange);
     };
+  }, []);
+
+  // Additional effect to handle direct navigation to hash URLs
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash && siteData.services.some(service => service.id === hash)) {
+      // Ensure the service is expanded and scrolled to
+      setTimeout(() => {
+        setExpandedService(hash);
+        
+        const element = document.getElementById(hash);
+        if (element) {
+          const headerHeight = 120;
+          const elementPosition = element.offsetTop - headerHeight;
+          
+          window.scrollTo({
+            top: elementPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    }
   }, []);
 
   const toggleExpanded = (serviceId: string) => {
@@ -86,7 +129,7 @@ export default function ServicesPage() {
     }, 600);
   };
   return (
-    <div className="min-h-[calc(100dvh-200px)] lg:min-h-[calc(100dvh-437px)] flex flex-col">
+    <div className="ios-fix-alt flex flex-col">
       {/* Hero Section */}
       <section className="relative py-20 bg-slate-900 text-white overflow-hidden">
         <div className="absolute inset-0">

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Wrench, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const machinesData = [
   {
@@ -61,6 +61,23 @@ const machinesData = [
 export default function MachinesPage() {
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
 
+  // iOS viewport height fix
+  useEffect(() => {
+    const setViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+    
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+    };
+  }, []);
+
   const openModal = (imageSrc: string, imageAlt: string) => {
     setSelectedImage({ src: imageSrc, alt: imageAlt });
     // Prevent body scroll when modal is open
@@ -74,7 +91,7 @@ export default function MachinesPage() {
   };
 
   return (
-    <div className="min-h-[calc(100dvh-200px)] lg:min-h-[calc(100dvh-437px)] flex flex-col">
+    <div className="ios-fix-alt flex flex-col">
       {/* Hero Section */}
       <section className="relative py-20 bg-slate-900 text-white overflow-hidden">
         <div className="absolute inset-0">
@@ -221,38 +238,7 @@ export default function MachinesPage() {
         </div>
       </section>
 
-      {/* Contact CTA Section */}
-      <section className="py-20 bg-slate-900 text-white">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <h3 className="text-3xl font-bold mb-4">
-              Ready to Enhance Your Project?
-            </h3>
-            <p className="text-xl text-grey-300 mb-8 max-w-3xl mx-auto">
-              From GPS-guided precision to versatile all-terrain capability, our modern fleet 
-              delivers the productivity and accuracy your project demands.
-            </p>
-            <div className="flex justify-center">
-              <Button
-                asChild
-                size="lg"
-                className="bg-custom-yellow hover:bg-custom-yellow-hover text-slate-900 font-semibold"
-              >
-                <Link href="/contact">
-                  Get in Touch
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+
 
       {/* Fullscreen Image Modal */}
       <AnimatePresence>
@@ -272,7 +258,6 @@ export default function MachinesPage() {
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="relative max-w-7xl max-h-[90vh] w-full h-[90vh]"
-              onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
               <button
