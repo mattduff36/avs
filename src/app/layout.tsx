@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { AppWrapper } from "@/components/AppWrapper";
+import { IntroScreen, IntroProvider } from "@/components/IntroScreen";
+import { LayoutContent } from "@/components/LayoutContent";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -77,9 +79,11 @@ export default function RootLayout({
     <html lang="en" data-scroll-behavior="smooth">
       <body className={inter.className}>
         <ErrorBoundary>
-          <AppWrapper>
-            {children}
-          </AppWrapper>
+          <IntroProvider>
+            <LayoutContent>{children}</LayoutContent>
+            <Analytics />
+            <IntroScreen />
+          </IntroProvider>
         </ErrorBoundary>
       </body>
     </html>
