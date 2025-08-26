@@ -53,7 +53,7 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(241,245,249,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(241,245,249,0.3)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20"></div>
 
                            <div className="relative z-10 container mx-auto px-8 md:px-16 pt-10 pb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_auto_3fr] items-center min-h-[80vh] max-w-7xl mx-auto gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_auto_3fr] items-center min-h-fit lg:min-h-[80vh] max-w-7xl mx-auto gap-6 lg:gap-8">
            <div className="lg:col-start-1 lg:col-span-1 col-span-full">
           
           {/* Left Column - Content */}
@@ -156,7 +156,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.0 }}
-          className="mt-10 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/50 shadow-lg p-8"
+          className="mt-20 md:mt-10 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/50 shadow-lg p-8"
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {siteData.stats.map((stat, index) => (
