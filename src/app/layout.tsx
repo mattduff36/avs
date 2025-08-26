@@ -1,10 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { Analytics } from "@vercel/analytics/react";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { AppWrapper } from "@/components/AppWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -61,12 +59,13 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/images/favicon/site.webmanifest",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
   themeColor: "#F1D64A",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    viewportFit: "cover",
-  },
 };
 
 export default function RootLayout({
@@ -78,12 +77,9 @@ export default function RootLayout({
     <html lang="en" data-scroll-behavior="smooth">
       <body className={inter.className}>
         <ErrorBoundary>
-          <Header />
-          <main className="min-h-screen pt-24">
+          <AppWrapper>
             {children}
-          </main>
-          <Footer />
-          <Analytics />
+          </AppWrapper>
         </ErrorBoundary>
       </body>
     </html>
