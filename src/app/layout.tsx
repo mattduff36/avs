@@ -77,6 +77,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
+      <head>
+        {/* Preload critical images for better performance */}
+        <link rel="preload" as="image" href="/images/intro_logo_HQ.png" />
+        <link rel="preload" as="image" href="/images/transport-haulage.jpg" />
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="https://www.facebook.com" />
+        <link rel="dns-prefetch" href="https://static.wixstatic.com" />
+      </head>
       <body className={inter.className}>
         <ErrorBoundary>
           <IntroProvider>

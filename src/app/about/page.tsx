@@ -33,6 +33,7 @@ export default function AboutPage() {
             src="/images/civil-engineering.jpg"
             alt="About A&V Squires"
             fill
+            sizes="100vw"
             className="object-cover opacity-20"
           />
         </div>
