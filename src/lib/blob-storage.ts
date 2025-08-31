@@ -1,4 +1,6 @@
 import { put, del, list } from '@vercel/blob';
+import fs from 'fs';
+import path from 'path';
 
 export interface ImageMetadata {
   filename: string;
@@ -72,6 +74,8 @@ export async function listImages(folder?: string) {
   }
 }
 
+
+
 /**
  * Replace an existing image (delete old, upload new)
  */
@@ -123,22 +127,65 @@ export async function cleanupOrphanedImages(
  */
 export async function migrateStaticImage(
   staticPath: string,
-  folder: 'machines' | 'services' | 'projects',
+  folder: string,
   itemId: string
 ): Promise<string | null> {
   try {
-    // Fetch the static image
-    const response = await fetch(`${process.env.VERCEL_URL || 'http://localhost:3000'}${staticPath}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch image: ${staticPath}`);
+    // Convert static path to file system path for local development
+    if (process.env.NODE_ENV === 'development') {
+      
+      // Remove leading slash and convert to file system path
+      const relativePath = staticPath.startsWith('/') ? staticPath.slice(1) : staticPath;
+      const fullPath = path.join(process.cwd(), 'public', relativePath);
+      
+      // Check if file exists
+      if (!fs.existsSync(fullPath)) {
+        console.warn(`Static image not found: ${fullPath}`);
+        return null;
+      }
+      
+      // Read the file
+      const fileBuffer = fs.readFileSync(fullPath);
+      const fileName = path.basename(staticPath);
+      const fileExtension = path.extname(fileName).toLowerCase();
+      
+      // Determine MIME type
+      const mimeTypes: Record<string, string> = {
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.png': 'image/png',
+        '.webp': 'image/webp',
+        '.gif': 'image/gif'
+      };
+      
+      const contentType = mimeTypes[fileExtension] || 'image/jpeg';
+      
+      // Generate unique filename for blob storage
+      const timestamp = Date.now();
+      const blobFileName = `${folder}/${itemId}-${timestamp}${fileExtension}`;
+      
+      // Upload to Vercel Blob
+      const blob = await put(blobFileName, fileBuffer, {
+        access: 'public',
+        contentType,
+      });
+      
+      console.log(`Successfully migrated ${staticPath} to ${blob.url}`);
+      return blob.url;
+    } else {
+      // For production, fetch from the URL
+      const response = await fetch(`${process.env.VERCEL_URL || 'http://localhost:3000'}${staticPath}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${staticPath}`);
+      }
+      
+      const blob = await response.blob();
+      const filename = staticPath.split('/').pop() || 'image.jpg';
+      const file = new File([blob], filename, { type: blob.type });
+      
+      const result = await uploadImage(file, folder as 'machines' | 'services' | 'projects', itemId);
+      return result.url;
     }
-    
-    const blob = await response.blob();
-    const filename = staticPath.split('/').pop() || 'image.jpg';
-    const file = new File([blob], filename, { type: blob.type });
-    
-    const result = await uploadImage(file, folder, itemId);
-    return result.url;
   } catch (error) {
     console.error(`Error migrating image ${staticPath}:`, error);
     return null;
