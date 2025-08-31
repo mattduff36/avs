@@ -134,7 +134,7 @@ export default function AdminLayout({ children, currentPage = "dashboard" }: Adm
             </div>
 
             {/* Mobile Menu */}
-            <div className="lg:hidden relative mobile-menu-container">
+            <div className="lg:hidden relative mobile-menu-container z-[9999]">
               <Button
                 variant="outline"
                 size="icon"
@@ -152,7 +152,7 @@ export default function AdminLayout({ children, currentPage = "dashboard" }: Adm
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full right-0 mt-2 w-56 bg-slate-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 py-2 z-50"
+                    className="absolute top-full right-0 mt-2 w-56 bg-slate-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 py-2 z-[9999]"
                   >
                     <nav className="space-y-1">
                       {navigationItems.map((item) => {
