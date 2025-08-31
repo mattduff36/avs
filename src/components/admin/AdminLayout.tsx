@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { LogOut, Home, FileText, Briefcase, FolderOpen, Wrench, Menu, X } from "lucide-react";
+import { LogOut, Home, FileText, Briefcase, FolderOpen, Wrench, Menu } from "lucide-react";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -16,6 +17,24 @@ export default function AdminLayout({ children, currentPage = "dashboard" }: Adm
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (isMobileMenuOpen && !target.closest('.mobile-menu-container')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -114,80 +133,78 @@ export default function AdminLayout({ children, currentPage = "dashboard" }: Adm
               </Button>
             </div>
 
-            {/* Mobile menu button */}
-            <div className="lg:hidden">
+            {/* Mobile Menu */}
+            <div className="lg:hidden relative mobile-menu-container">
               <Button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 variant="outline"
-                size="sm"
+                size="icon"
                 className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
-                {isMobileMenuOpen ? (
-                  <X className="h-5 w-5" />
-                ) : (
-                  <Menu className="h-5 w-5" />
-                )}
+                <Menu className="h-5 w-5" />
               </Button>
+              
+              {/* Dropdown Menu */}
+              <AnimatePresence>
+                {isMobileMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full right-0 mt-2 w-56 bg-slate-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 py-2 z-50"
+                  >
+                    <nav className="space-y-1">
+                      {navigationItems.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <Link
+                            key={item.name}
+                            href={item.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className={`flex items-center w-full px-4 py-3 text-left transition-colors font-medium ${
+                              item.current
+                                ? "text-custom-yellow bg-custom-yellow/10 border-r-2 border-custom-yellow"
+                                : "text-slate-300 hover:text-white hover:bg-white/10"
+                            }`}
+                          >
+                            <Icon className="h-4 w-4 mr-3" />
+                            {item.name}
+                          </Link>
+                        );
+                      })}
+                      
+                      {/* Separator */}
+                      <div className="border-t border-white/20 my-2"></div>
+                      
+                      {/* Mobile Logout Button */}
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          handleLogout();
+                        }}
+                        disabled={isLoggingOut}
+                        className="flex items-center w-full px-4 py-3 text-left text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors font-medium"
+                      >
+                        {isLoggingOut ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-400 mr-3"></div>
+                            <span>Logging out...</span>
+                          </>
+                        ) : (
+                          <>
+                            <LogOut className="h-4 w-4 mr-3" />
+                            <span>Logout</span>
+                          </>
+                        )}
+                      </button>
+                    </nav>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
-
-        {/* Mobile Navigation Menu */}
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="lg:hidden bg-white/5 backdrop-blur-sm border-t border-white/20"
-          >
-            <div className="px-4 py-4 space-y-2">
-              {navigationItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                      item.current
-                        ? "bg-custom-yellow/20 text-white border-l-4 border-custom-yellow"
-                        : "text-slate-300 hover:text-white hover:bg-white/10"
-                    }`}
-                  >
-                    <Icon className="h-5 w-5 mr-3" />
-                    {item.name}
-                  </a>
-                );
-              })}
-              
-              {/* Mobile Logout Button */}
-              <div className="pt-4 border-t border-white/20">
-                <Button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    handleLogout();
-                  }}
-                  disabled={isLoggingOut}
-                  variant="outline"
-                  className="w-full bg-red-500 text-white border-red-500 hover:bg-red-600 hover:border-red-600"
-                >
-                  {isLoggingOut ? (
-                    <div className="flex items-center space-x-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span>Logging out...</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center space-x-2">
-                      <LogOut className="h-4 w-4" />
-                      <span>Logout</span>
-                    </div>
-                  )}
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        )}
       </header>
 
       {/* Main Content */}
