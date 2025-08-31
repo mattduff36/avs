@@ -1,339 +1,318 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import AdminLayout from "@/components/admin/AdminLayout";
-import { motion } from "framer-motion";
-import { Edit2, Save, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-interface Project {
-  id: number;
-  title: string;
-  client: string;
-  value: string;
-  category: string;
-  description: string;
-  year: string;
-  featured: boolean;
-}
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { AlertCircle, CheckCircle, Loader2, Plus, Edit, Trash2, Calendar, User } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import AdminLayout from '@/components/admin/AdminLayout';
+import ProjectForm from '@/components/admin/ProjectForm';
+import Image from 'next/image';
+import type { Project } from '@/lib/dynamic-content';
 
 export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
-    // Load projects data (hardcoded for now, but could come from API)
-    const projectsData: Project[] = [
-      {
-        id: 1,
-        title: "New Car Park - Saint Gobain",
-        client: "Saint Gobain",
-        value: "£1,000,000.00",
-        category: "Civil Engineering",
-        description: "We are pleased to announce the successful installation of a new tarmac car park for one of our long-standing customers. This upgrade includes dedicated EV bays, ensuring convenience and sustainability for all users. Thank you for trusting us with your parking needs.",
-        year: "2024",
-        featured: true
-      },
-      {
-        id: 2,
-        title: "Multiple Major Civils Project's including Screenhouse, Crusher, Conveyor and Bridge Abutment Works",
-        client: "Tarmac",
-        value: "£500,000.00",
-        category: "Civil Engineering",
-        description: "Our large-scale civil works project presented a range of complex engineering challenges. From navigating ducting routes and constructing foundation base slabs on difficult terrain and cliff edges, to installing conveyor bases and ensuring stable access with stoned pathways, we tackled it all. Our team expertly managed the intricacies of piling mats and crane pads, demonstrating our commitment to overcoming obstacles in pursuit of excellence.",
-        year: "2024",
-        featured: true
-      },
-      {
-        id: 3,
-        title: "Site-wide civil engineering contracts for pumphouse bases, generator bases, fire main civils, tank repairs in confined spaces, landscaping, paving & surfacing works",
-        client: "Exolum",
-        value: "£380,000.00",
-        category: "Civil Engineering",
-        description: "From minor works to major infrastructure developments, we demonstrated professionalism and keen attention to detail to shine through in every initiative, including impressive site-wide terminal surfacing and significant electrical upgrades. With project values spanning from £1,000 to £500,000, for this customer we have made a remarkable impact with over £3 million spent in just the past year. The feedback from Contract and Project Managers is nothing short of fantastic, praising their top-notch safety measures, effective project management, and exceptional workmanship, all while building a strong relationship based on trust and reliability!",
-        year: "2024",
-        featured: false
-      },
-      {
-        id: 4,
-        title: "Tower works",
-        client: "Omexom",
-        value: "£100,000.00",
-        category: "Specialised Works",
-        description: "Working at numerous locations nationwide to install and remove overhead line tower foundations and create access. We also provide essential vegetation clearance services to facilitate smooth operations.",
-        year: "2024",
-        featured: false
-      }
-    ];
-    
-    setProjects(projectsData);
-    setIsLoading(false);
+    fetchProjects();
   }, []);
 
-  if (isLoading) {
-    return (
-      <AdminLayout>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-yellow"></div>
-        </div>
-      </AdminLayout>
-    );
-  }
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch('/api/admin/dynamic/projects');
+      const data = await response.json();
+      
+      if (data.success) {
+        setProjects(data.data || []);
+      } else {
+        console.error('Failed to fetch projects:', data.message);
+        setMessage({ type: 'error', text: 'Failed to load projects' });
+      }
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      setMessage({ type: 'error', text: 'Error loading projects' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  if (error) {
-    return (
-      <AdminLayout>
-        <div className="text-center py-12">
-          <h2 className="text-xl font-semibold text-white mb-2">Error Loading Projects</h2>
-          <p className="text-slate-300 mb-4">{error}</p>
-        </div>
-      </AdminLayout>
-    );
-  }
+  const handleSave = (project: Project) => {
+    if (selectedProject) {
+      // Update existing project
+      setProjects(prev => prev.map(p => p.id === project.id ? project : p));
+      setMessage({ type: 'success', text: 'Project updated successfully' });
+    } else {
+      // Add new project
+      setProjects(prev => [...prev, project]);
+      setMessage({ type: 'success', text: 'Project created successfully' });
+    }
+    
+    setIsFormOpen(false);
+    setSelectedProject(null);
+  };
+
+  const handleEdit = (project: Project) => {
+    setSelectedProject(project);
+    setIsFormOpen(true);
+  };
+
+  const handleDelete = async (project: Project) => {
+    setIsDeleting(project.id);
+    try {
+      const response = await fetch(`/api/admin/dynamic/projects?id=${project.id}`, {
+        method: 'DELETE',
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setProjects(prev => prev.filter(p => p.id !== project.id));
+        setMessage({ type: 'success', text: 'Project deleted successfully' });
+      } else {
+        setMessage({ type: 'error', text: result.message || 'Failed to delete project' });
+      }
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      setMessage({ type: 'error', text: 'Error deleting project' });
+    } finally {
+      setIsDeleting(null);
+    }
+  };
+
+  const handleNewProject = () => {
+    setSelectedProject(null);
+    setIsFormOpen(true);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
+  // Clear message after 5 seconds
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   return (
     <AdminLayout currentPage="projects">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Projects Management</h1>
-        <p className="text-slate-300">Manage project descriptions and details</p>
-      </div>
-
-      {/* Projects List */}
       <div className="space-y-6">
-        {projects.map((project) => (
-          <ProjectToggle
-            key={project.id}
-            project={project}
-            onUpdate={(updatedProject) => {
-              setProjects(prev => prev.map(p => p.id === updatedProject.id ? updatedProject : p));
-            }}
-          />
-        ))}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">Projects Management</h1>
+            <p className="text-slate-300">Manage project listings with images and details</p>
+          </div>
+          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+            <DialogTrigger asChild>
+              <Button 
+                onClick={handleNewProject}
+                className="bg-custom-yellow text-slate-900 hover:bg-custom-yellow/90"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Project
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-slate-900 border-slate-600">
+              <DialogHeader>
+                <DialogTitle className="text-white">
+                  {selectedProject ? 'Edit Project' : 'Add New Project'}
+                </DialogTitle>
+                <DialogDescription className="text-slate-400">
+                  {selectedProject 
+                    ? 'Update project information and image'
+                    : 'Create a new project with image and details'
+                  }
+                </DialogDescription>
+              </DialogHeader>
+              <ProjectForm
+                project={selectedProject || undefined}
+                onSave={handleSave}
+                onCancel={() => {
+                  setIsFormOpen(false);
+                  setSelectedProject(null);
+                }}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        <AnimatePresence>
+          {message && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className={`p-4 rounded-lg border flex items-center space-x-2 ${
+                message.type === 'success'
+                  ? 'bg-green-500/10 border-green-500/20 text-green-400'
+                  : 'bg-red-500/10 border-red-500/20 text-red-400'
+              }`}
+            >
+              {message.type === 'success' ? (
+                <CheckCircle className="h-5 w-5" />
+              ) : (
+                <AlertCircle className="h-5 w-5" />
+              )}
+              <span>{message.text}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-custom-yellow" />
+            <span className="ml-2 text-slate-300">Loading projects...</span>
+          </div>
+        ) : projects.length === 0 ? (
+          <Card className="bg-slate-800/50 border-slate-600">
+            <CardContent className="py-12 text-center">
+              <p className="text-slate-400 text-lg mb-4">No projects found</p>
+              <p className="text-slate-500 mb-6">Get started by adding your first project</p>
+              <Button 
+                onClick={handleNewProject}
+                className="bg-custom-yellow text-slate-900 hover:bg-custom-yellow/90"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Your First Project
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-6">
+            {projects.map((project) => (
+              <Card key={project.id} className="bg-slate-800/50 border-slate-600">
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-1">
+                      <CardTitle className="text-white flex items-center space-x-2">
+                        <span>{project.title}</span>
+                        <Badge variant="outline" className="border-custom-yellow text-custom-yellow">
+                          {project.category}
+                        </Badge>
+                      </CardTitle>
+                      <div className="flex items-center space-x-4 text-slate-400 text-sm">
+                        <div className="flex items-center space-x-1">
+                          <User className="h-4 w-4" />
+                          <span>{project.client}</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Calendar className="h-4 w-4" />
+                          <span>{formatDate(project.completedDate)}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(project)}
+                        className="border-custom-yellow text-custom-yellow hover:bg-custom-yellow hover:text-slate-900"
+                      >
+                        <Edit className="h-4 w-4 mr-1" />
+                        Edit
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={isDeleting === project.id}
+                            className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
+                          >
+                            {isDeleting === project.id ? (
+                              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                            ) : (
+                              <Trash2 className="h-4 w-4 mr-1" />
+                            )}
+                            Delete
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="bg-slate-900 border-slate-600">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-white">
+                              Delete Project
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="text-slate-400">
+                              Are you sure you want to delete &quot;{project.title}&quot;? This action cannot be undone and will also delete the associated image.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="border-slate-600 text-slate-300 hover:bg-slate-700">
+                              Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDelete(project)}
+                              className="bg-red-500 text-white hover:bg-red-600"
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid md:grid-cols-3 gap-4">
+                    {/* Image */}
+                    {project.image && (
+                      <div className="md:col-span-1">
+                        <div className="relative rounded-lg overflow-hidden bg-slate-700 aspect-video">
+                          <Image
+                            src={project.image}
+                            alt={project.title}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Content */}
+                    <div className={project.image ? "md:col-span-2" : "md:col-span-3"}>
+                      <div className="space-y-3">
+                        <div>
+                          <h4 className="text-sm font-medium text-slate-300 mb-1">Description</h4>
+                          <p className="text-slate-400 text-sm leading-relaxed">
+                            {project.description}
+                          </p>
+                        </div>
+                        
+                        {project.tags.length > 0 && (
+                          <div>
+                            <h4 className="text-sm font-medium text-slate-300 mb-2">Tags</h4>
+                            <div className="flex flex-wrap gap-1">
+                              {project.tags.map((tag, index) => (
+                                <Badge key={index} variant="secondary" className="text-xs bg-slate-700 text-slate-300">
+                                  {tag}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </AdminLayout>
-  );
-}
-
-interface ProjectToggleProps {
-  project: Project;
-  onUpdate: (project: Project) => void;
-}
-
-function ProjectToggle({ project, onUpdate }: ProjectToggleProps) {
-  const [isEditingDescription, setIsEditingDescription] = useState(false);
-  const [isEditingDetails, setIsEditingDetails] = useState(false);
-  const [editDescription, setEditDescription] = useState(project.description);
-  const [editTitle, setEditTitle] = useState(project.title);
-  const [editClient, setEditClient] = useState(project.client);
-  const [editValue, setEditValue] = useState(project.value);
-  const [editCategory, setEditCategory] = useState(project.category);
-  const [isSaving, setIsSaving] = useState(false);
-
-  const handleSaveDescription = async () => {
-    setIsSaving(true);
-    try {
-      // Here you would typically make an API call to save the description
-      // For now, we'll just update the local state
-      const updatedProject = { ...project, description: editDescription };
-      onUpdate(updatedProject);
-      setIsEditingDescription(false);
-    } catch (error) {
-      console.error("Error saving description:", error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleSaveDetails = async () => {
-    setIsSaving(true);
-    try {
-      // Here you would typically make an API call to save the details
-      // For now, we'll just update the local state
-      const updatedProject = { 
-        ...project, 
-        title: editTitle,
-        client: editClient,
-        value: editValue,
-        category: editCategory
-      };
-      onUpdate(updatedProject);
-      setIsEditingDetails(false);
-    } catch (error) {
-      console.error("Error saving details:", error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setEditDescription(project.description);
-    setEditTitle(project.title);
-    setEditClient(project.client);
-    setEditValue(project.value);
-    setEditCategory(project.category);
-    setIsEditingDescription(false);
-    setIsEditingDetails(false);
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-white/10 backdrop-blur-sm rounded-lg shadow-sm border border-white/20 p-6"
-    >
-      {/* Project Header */}
-      <div className="mb-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h3 className="text-xl font-semibold text-white mb-2">{project.title}</h3>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400">
-              <span>Client: {project.client}</span>
-              <span>Value: {project.value}</span>
-              <span>Category: {project.category}</span>
-              <span>Year: {project.year}</span>
-              {project.featured && <span className="bg-custom-yellow text-slate-900 px-2 py-1 rounded text-xs font-semibold">Featured</span>}
-            </div>
-          </div>
-          {!isEditingDetails && (
-            <Button
-              onClick={() => setIsEditingDetails(true)}
-              variant="outline"
-              size="sm"
-              className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent ml-4"
-            >
-              <Edit2 className="h-4 w-4 mr-2" />
-              Edit Details
-            </Button>
-          )}
-        </div>
-
-        {/* Edit Details Form */}
-        {isEditingDetails && (
-          <div className="space-y-4 mb-6 p-4 bg-white/5 rounded-md">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Title</label>
-                <input
-                  type="text"
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full p-3 bg-white/10 border border-white/20 rounded-md text-white placeholder-slate-400 focus:ring-2 focus:ring-custom-yellow focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Client</label>
-                <input
-                  type="text"
-                  value={editClient}
-                  onChange={(e) => setEditClient(e.target.value)}
-                  className="w-full p-3 bg-white/10 border border-white/20 rounded-md text-white placeholder-slate-400 focus:ring-2 focus:ring-custom-yellow focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Value</label>
-                <input
-                  type="text"
-                  value={editValue}
-                  onChange={(e) => setEditValue(e.target.value)}
-                  className="w-full p-3 bg-white/10 border border-white/20 rounded-md text-white placeholder-slate-400 focus:ring-2 focus:ring-custom-yellow focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Category</label>
-                <input
-                  type="text"
-                  value={editCategory}
-                  onChange={(e) => setEditCategory(e.target.value)}
-                  className="w-full p-3 bg-white/10 border border-white/20 rounded-md text-white placeholder-slate-400 focus:ring-2 focus:ring-custom-yellow focus:border-transparent"
-                />
-              </div>
-            </div>
-            <div className="flex space-x-2">
-              <Button
-                onClick={handleCancelEdit}
-                disabled={isSaving}
-                variant="outline"
-                size="sm"
-                className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent"
-              >
-                <X className="h-4 w-4 mr-2" />
-                Cancel
-              </Button>
-              <Button
-                onClick={handleSaveDetails}
-                disabled={isSaving}
-                size="sm"
-                className="bg-custom-yellow hover:bg-custom-yellow-hover text-slate-900"
-              >
-                {isSaving ? (
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-slate-900 mr-2"></div>
-                ) : (
-                  <Save className="h-4 w-4 mr-2" />
-                )}
-                Save
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Description Section */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h4 className="text-lg font-medium text-white">Description</h4>
-          {!isEditingDescription && (
-            <Button
-              onClick={() => setIsEditingDescription(true)}
-              variant="outline"
-              size="sm"
-              className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent"
-            >
-              <Edit2 className="h-4 w-4 mr-2" />
-              Edit
-            </Button>
-          )}
-        </div>
-
-        {isEditingDescription ? (
-          <div className="space-y-4">
-            <textarea
-              value={editDescription}
-              onChange={(e) => setEditDescription(e.target.value)}
-              className="w-full h-32 p-3 bg-white/10 border border-white/20 rounded-md text-white placeholder-slate-400 focus:ring-2 focus:ring-custom-yellow focus:border-transparent resize-none"
-              placeholder="Project description"
-            />
-            <div className="flex space-x-2">
-              <Button
-                onClick={handleCancelEdit}
-                disabled={isSaving}
-                variant="outline"
-                size="sm"
-                className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent"
-              >
-                <X className="h-4 w-4 mr-2" />
-                Cancel
-              </Button>
-              <Button
-                onClick={handleSaveDescription}
-                disabled={isSaving}
-                size="sm"
-                className="bg-custom-yellow hover:bg-custom-yellow-hover text-slate-900"
-              >
-                {isSaving ? (
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-slate-900 mr-2"></div>
-                ) : (
-                  <Save className="h-4 w-4 mr-2" />
-                )}
-                Save
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <p className="text-slate-300 bg-white/5 p-4 rounded-md">{project.description}</p>
-        )}
-      </div>
-    </motion.div>
   );
 }
