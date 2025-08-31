@@ -11,99 +11,48 @@ import { useSearchParams } from "next/navigation";
 import ForSaleBadge from "@/components/ForSaleBadge";
 
 interface Machine {
-  id: number;
+  id: string;
   title: string;
   description: string;
-  image: string;
+  image?: string;
   features: string[];
   side: 'left' | 'right';
   forSale: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-// Default machines data (fallback)
-const defaultMachinesData: Machine[] = [
-  {
-    id: 1,
-    title: "Komatsu D61 PXi",
-    description: "The Intelligent Machine Control (iMC) on the D61 improves efficiency and reduces cost to our customers in any application. The iMC allows automated operation from heavy dozing to fine grading. Our Komatsu D61 PXi dozers are available for contracted works and short or long-term hire.",
-    image: "/images/komatsu-d61-pxi.jpg",
-    features: ["Intelligent Machine Control", "Heavy dozing to fine grading", "Available for hire"],
-    side: "left",
-    forSale: false
-  },
-  {
-    id: 2,
-    title: "Komatsu's Intelligent Machine Control",
-    description: "We have a choice of Komatsu excavators with Komatsu's intelligent machine control technology, meaning whatever the job we will have the right machine to ensure our customers projects are completed to highest accuracy and in a fraction of the time compared to conventional methods. Onboard weighing will optimize loading, ensuring every truck load is road legal and filled to its full capacity.",
-    image: "/images/komatsu-intelligent-control.jpg",
-    features: ["Multiple excavator options", "Highest accuracy", "Onboard weighing system"],
-    side: "right",
-    forSale: false
-  },
-  {
-    id: 3,
-    title: "Dual View Dumpers",
-    description: "Our high-performance Dual View Dumpers allow the driver to quickly change the seat position through a 180 degrees to ensure that the operator always has the best view, whether loading or during transportation. This helps save time on site and ensures maximum safety.",
-    image: "/images/dual-view-dumpers.jpg",
-    features: ["180-degree seat rotation", "Maximum safety", "Time-saving design"],
-    side: "left",
-    forSale: false
-  },
-  {
-    id: 4,
-    title: "McCloskey R105 and 621",
-    description: "The McCloskey Screener and Trommel are essential pieces of equipment for efficient material separation and screening. The screener is designed to handle a variety of materials, providing high throughput excellent performance in various applications. Meanwhile, the trommel offers a rotating drum that effectively separates materials based on size, ensuring optimal sorting and processing.",
-    image: "/images/mccloskey-screener.webp",
-    features: ["Material separation", "High throughput", "Optimal sorting"],
-    side: "right",
-    forSale: false
-  },
-  {
-    id: 5,
-    title: "Loading Shovels",
-    description: "A loading shovel, also known as a front-end loader, is a versatile piece of heavy machinery commonly used in construction, agriculture, and material handling. It is primarily utilised for moving bulk materials as soil, gravel, and sand, making it ideal for tasks like loading trucks, clearing debris, and digging trenches. We can provide loading shovels for hire either operated or on a self drive basis.",
-    image: "/images/loading-shovels.jpg",
-    features: ["Versatile machinery", "Bulk material handling", "Operated or self-drive"],
-    side: "left",
-    forSale: false
-  },
-  {
-    id: 6,
-    title: "All Terrain Vehicles",
-    description: "Our ATV hire service for construction sites provides reliable and durable all-terrain vehicles to enhance your project efficiency. Designed to navigate rough terrains and heavy loads, our ATVs help transport materials and personnel with ease. Each vehicle is well-maintained and equipped to handle the demands of any construction environment.",
-    image: "/images/all-terrain-vehicles.jpg",
-    features: ["Rough terrain navigation", "Material transport", "Well-maintained fleet"],
-    side: "right",
-    forSale: false
-  }
-];
+
 
 export default function MachinesPage() {
   const searchParams = useSearchParams();
   const forSaleOnly = searchParams.get('forSale') === 'true';
   
-  const [allMachines, setAllMachines] = useState<Machine[]>(defaultMachinesData);
-  const [machines, setMachines] = useState<Machine[]>(defaultMachinesData);
+  const [allMachines, setAllMachines] = useState<Machine[]>([]);
+  const [machines, setMachines] = useState<Machine[]>([]);
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
   const [isModalLoading, setIsModalLoading] = useState(false);
 
-  // Fetch machine data with sale status
+  // Fetch machine data from dynamic API
   useEffect(() => {
     const fetchMachines = async () => {
       try {
-        const response = await fetch('/api/admin/machines');
+        const response = await fetch('/api/admin/dynamic/machines');
         if (response.ok) {
           const data = await response.json();
-          setAllMachines(data.data || defaultMachinesData);
+          if (data.success && data.data) {
+            setAllMachines(data.data);
+          } else {
+            console.warn('No dynamic machines data available');
+            setAllMachines([]);
+          }
         } else {
-          console.warn('Failed to fetch machines data, using default');
-          setAllMachines(defaultMachinesData);
+          console.warn('Failed to fetch dynamic machines data');
+          setAllMachines([]);
         }
       } catch (error) {
-        console.warn('Error fetching machines data:', error);
-        setAllMachines(defaultMachinesData);
-      } finally {
-        // Loading complete
+        console.warn('Error fetching dynamic machines data:', error);
+        setAllMachines([]);
       }
     };
 
@@ -269,15 +218,21 @@ export default function MachinesPage() {
                         {/* Image */}
                         <div 
                           className="relative h-80 md:h-96 overflow-hidden cursor-pointer group"
-                          onClick={() => openModal(machine.image, machine.title)}
+                          onClick={() => machine.image && openModal(machine.image, machine.title)}
                         >
-                          <Image
-                            src={machine.image}
-                            alt={machine.title}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className="object-cover transition-transform duration-700 group-hover:scale-110"
-                          />
+                          {machine.image ? (
+                            <Image
+                              src={machine.image}
+                              alt={machine.title}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 50vw"
+                              className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-slate-200 flex items-center justify-center">
+                              <Wrench className="h-16 w-16 text-slate-400" />
+                            </div>
+                          )}
                           
                           {/* For Sale Badge */}
                           {machine.forSale && <ForSaleBadge />}

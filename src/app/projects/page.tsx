@@ -10,9 +10,53 @@ import { CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { ArrowRight, MapPin, PoundSterling, X, ChevronDown } from "lucide-react";
 
+// Dynamic projects interface
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  client: string;
+  completedDate: string;
+  category: string;
+  tags: string[];
+  image?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export default function ProjectsPage() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
   const [animatingProject, setAnimatingProject] = useState<string | null>(null);
+
+  // Fetch projects data from dynamic API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('/api/admin/dynamic/projects');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setProjects(data.data);
+          } else {
+            console.warn('No dynamic projects data available');
+            setProjects([]);
+          }
+        } else {
+          console.warn('Failed to fetch dynamic projects data');
+          setProjects([]);
+        }
+      } catch (error) {
+        console.warn('Error fetching dynamic projects data:', error);
+        setProjects([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   // iOS viewport height fix
   useEffect(() => {
@@ -59,55 +103,9 @@ export default function ProjectsPage() {
       }
     }, 600);
   };
-  const projects = [
-    {
-      id: 1,
-      title: "New Car Park - Saint Gobain",
-      client: "Saint Gobain",
-      value: "£1,000,000.00",
-      category: "Civil Engineering",
-      description: "We are pleased to announce the successful installation of a new tarmac car park for one of our long-standing customers. This upgrade includes dedicated EV bays, ensuring convenience and sustainability for all users. Thank you for trusting us with your parking needs.",
-      image: "/images/saint-gobain-carpark.jpg",
-      year: "2024",
-      featured: true
-    },
-    {
-      id: 2,
-      title: "Multiple Major Civils Project's including Screenhouse, Crusher, Conveyor and Bridge Abutment Works",
-      client: "Tarmac",
-      value: "£500,000.00",
-      category: "Civil Engineering",
-      description: "Our large-scale civil works project presented a range of complex engineering challenges. From navigating ducting routes and constructing foundation base slabs on difficult terrain and cliff edges, to installing conveyor bases and ensuring stable access with stoned pathways, we tackled it all. Our team expertly managed the intricacies of piling mats and crane pads, demonstrating our commitment to overcoming obstacles in pursuit of excellence.",
-      image: "/images/tarmac-major-civils.jpg",
-      year: "2024",
-      featured: true
-    },
-    {
-      id: 3,
-      title: "Site-wide civil engineering contracts for pumphouse bases, generator bases, fire main civils, tank repairs in confined spaces, landscaping, paving & surfacing works",
-      client: "Exolum",
-      value: "£380,000.00",
-      category: "Civil Engineering",
-      description: "From minor works to major infrastructure developments, we demonstrated professionalism and keen attention to detail to shine through in every initiative, including impressive site-wide terminal surfacing and significant electrical upgrades. With project values spanning from £1,000 to £500,000, for this customer we have made a remarkable impact with over £3 million spent in just the past year. The feedback from Contract and Project Managers is nothing short of fantastic, praising their top-notch safety measures, effective project management, and exceptional workmanship, all while building a strong relationship based on trust and reliability!",
-      image: "/images/exolum-site-wide.jpg",
-      year: "2024",
-      featured: false
-    },
-    {
-      id: 4,
-      title: "Tower works",
-      client: "Omexom",
-      value: "£100,000.00",
-      category: "Specialised Works",
-      description: "Working at numerous locations nationwide to install and remove overhead line tower foundations and create access. We also provide essential vegetation clearance services to facilitate smooth operations.",
-      image: "/images/omexom-tower-works.jpg",
-      year: "2024",
-      featured: false
-    }
-  ];
-
-  const featuredProjects = projects.filter(project => project.featured);
-  const otherProjects = projects.filter(project => !project.featured);
+  // Since the migrated projects don't have featured/value fields, we'll show all projects
+  const featuredProjects = projects.slice(0, 2); // Show first 2 as featured
+  const otherProjects = projects.slice(2); // Rest as other projects
 
   return (
     <div className="ios-fix-alt flex flex-col">
@@ -160,9 +158,15 @@ export default function ProjectsPage() {
             </p>
           </motion.div>
 
-          {/* Large Featured Projects */}
-          <div className="space-y-16 mb-20">
-            {featuredProjects.map((project, index) => (
+          {loading ? (
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-yellow"></div>
+            </div>
+          ) : (
+            <>
+              {/* Large Featured Projects */}
+              <div className="space-y-16 mb-20">
+                {featuredProjects.map((project, index) => (
               <motion.div
                 key={project.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -186,7 +190,7 @@ export default function ProjectsPage() {
                       </div>
                       <div className="flex items-center space-x-2">
                         <PoundSterling className="h-4 w-4 text-custom-yellow" />
-                        <span className="font-bold text-slate-900">{project.value}</span>
+                        <span className="font-bold text-slate-900">{project.client}</span>
                       </div>
                     </div>
                     
@@ -208,13 +212,24 @@ export default function ProjectsPage() {
                 
                 <div className={`${index % 2 === 1 ? 'lg:col-start-1' : ''}`}>
                   <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover hover:scale-105 transition-transform duration-700"
-                    />
+                    {project.image ? (
+                      <Image
+                        src={project.image}
+                        alt={project.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover hover:scale-105 transition-transform duration-700"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-slate-200 flex items-center justify-center">
+                        <div className="text-slate-400 text-center">
+                          <div className="w-16 h-16 mx-auto mb-2 bg-slate-300 rounded-lg flex items-center justify-center">
+                            <span className="text-slate-500 font-bold">IMG</span>
+                          </div>
+                          <p className="text-sm">No Image Available</p>
+                        </div>
+                      </div>
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                   </div>
                 </div>
@@ -447,7 +462,7 @@ export default function ProjectsPage() {
                                 </div>
                                 <div className="flex items-center space-x-2">
                                   <PoundSterling className="h-4 w-4 text-custom-yellow" />
-                                  <span className="font-bold text-slate-900">{project.value}</span>
+                                  <span className="font-bold text-slate-900">{project.client}</span>
                                 </div>
                                 <Badge className="bg-custom-yellow text-slate-900 font-semibold">
                                   {project.category}
@@ -459,13 +474,24 @@ export default function ProjectsPage() {
                             <div className="mb-8">
                               {/* Image floated left on desktop, stacked on mobile */}
                               <div className="float-none lg:float-left lg:w-80 lg:h-60 xl:w-96 xl:h-72 lg:mr-8 lg:mb-4 mb-6">
-                                <Image
-                                  src={project.image}
-                                  alt={project.title}
-                                  width={400}
-                                  height={300}
-                                  className="w-full h-64 lg:h-full object-cover rounded-lg shadow-lg"
-                                />
+                                {project.image ? (
+                                  <Image
+                                    src={project.image}
+                                    alt={project.title}
+                                    width={400}
+                                    height={300}
+                                    className="w-full h-64 lg:h-full object-cover rounded-lg shadow-lg"
+                                  />
+                                ) : (
+                                  <div className="w-full h-64 lg:h-full bg-slate-200 rounded-lg shadow-lg flex items-center justify-center">
+                                    <div className="text-slate-400 text-center">
+                                      <div className="w-12 h-12 mx-auto mb-2 bg-slate-300 rounded-lg flex items-center justify-center">
+                                        <span className="text-slate-500 font-bold text-sm">IMG</span>
+                                      </div>
+                                      <p className="text-xs">No Image</p>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
 
                               {/* Description text that wraps around image */}
@@ -506,19 +532,30 @@ export default function ProjectsPage() {
                           >
                             {/* Image Section - Collapsed */}
                             <div className="relative overflow-hidden h-64">
-                              <Image
-                                src={project.image}
-                                alt={project.title}
-                                fill
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                className="object-cover group-hover:scale-110 transition-transform duration-700"
-                              />
+                              {project.image ? (
+                                <Image
+                                  src={project.image}
+                                  alt={project.title}
+                                  fill
+                                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                  className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-slate-200 flex items-center justify-center">
+                                  <div className="text-slate-400 text-center">
+                                    <div className="w-12 h-12 mx-auto mb-2 bg-slate-300 rounded-lg flex items-center justify-center">
+                                      <span className="text-slate-500 font-bold text-sm">IMG</span>
+                                    </div>
+                                    <p className="text-xs">No Image</p>
+                                  </div>
+                                </div>
+                              )}
                               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                               
                               {/* Value Badge */}
                               <div className="absolute top-4 right-4">
                                 <Badge className="bg-custom-yellow text-slate-900 font-bold">
-                                  {project.value}
+                                  {project.client}
                                 </Badge>
                               </div>
 
@@ -567,10 +604,8 @@ export default function ProjectsPage() {
               })}
             </div>
           </motion.div>
-
-
-
-
+            </>
+          )}
         </div>
       </section>
     </div>

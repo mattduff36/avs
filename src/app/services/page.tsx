@@ -9,12 +9,53 @@ import { ImageSkeleton } from "@/components/ui/image-skeleton";
 
 
 import { X, ChevronDown } from "lucide-react";
-import { siteData } from "@/data/site-data";
+// Dynamic services interface
+interface Service {
+  id: string;
+  title: string;
+  description: string;
+  fullDescription?: string;
+  features: string[];
+  icon: string;
+  image?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 export default function ServicesPage() {
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
   const [expandedService, setExpandedService] = useState<string | null>(null);
   const [animatingService, setAnimatingService] = useState<string | null>(null);
   const [imageLoadingStates, setImageLoadingStates] = useState<Record<string, boolean>>({});
+
+  // Fetch services data from dynamic API
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch('/api/admin/dynamic/services');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setServices(data.data);
+          } else {
+            console.warn('No dynamic services data available');
+            setServices([]);
+          }
+        } else {
+          console.warn('Failed to fetch dynamic services data');
+          setServices([]);
+        }
+      } catch (error) {
+        console.warn('Error fetching dynamic services data:', error);
+        setServices([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   // iOS viewport height fix
   useEffect(() => {
@@ -45,7 +86,7 @@ export default function ServicesPage() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash && siteData.services.some(service => service.id === hash)) {
+      if (hash && services.some(service => service.id === hash)) {
         // Small delay to ensure page is fully loaded
         setTimeout(() => {
           setExpandedService(hash);
@@ -83,7 +124,7 @@ export default function ServicesPage() {
   // Additional effect to handle direct navigation to hash URLs
   useEffect(() => {
     const hash = window.location.hash.replace('#', '');
-    if (hash && siteData.services.some(service => service.id === hash)) {
+    if (hash && services.some(service => service.id === hash)) {
       // Ensure the service is expanded and scrolled to
       setTimeout(() => {
         setExpandedService(hash);
@@ -175,8 +216,13 @@ export default function ServicesPage() {
       {/* All Services Grid - Comprehensive Layout */}
       <section className="py-20 bg-gradient-to-br from-slate-50 to-gray-100">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
-            {siteData.services.map((service, index) => {
+          {loading ? (
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-yellow"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
+              {services.map((service, index) => {
               const isExpanded = expandedService === service.id;
               const isAnimating = animatingService === service.id;
               const showContent = !isAnimating;
@@ -227,7 +273,7 @@ export default function ServicesPage() {
                           {/* Service Title */}
                           <div className="mb-6">
                             <h3 className="text-3xl lg:text-4xl font-bold text-slate-900">
-                              {service.name}
+                              {service.title}
                             </h3>
                           </div>
 
@@ -241,15 +287,26 @@ export default function ServicesPage() {
                                   className="w-full h-64 lg:h-full absolute inset-0 z-20"
                                 />
                               )}
-                              <Image
-                                src={service.image}
-                                alt={service.name}
-                                width={400}
-                                height={300}
-                                className="w-full h-64 lg:h-full object-cover rounded-lg shadow-lg relative z-10"
-                                onLoadStart={() => handleImageStartLoad(service.id)}
-                                onLoad={() => handleImageLoad(service.id)}
-                              />
+                              {service.image ? (
+                                <Image
+                                  src={service.image}
+                                  alt={service.title}
+                                  width={400}
+                                  height={300}
+                                  className="w-full h-64 lg:h-full object-cover rounded-lg shadow-lg relative z-10"
+                                  onLoadStart={() => handleImageStartLoad(service.id)}
+                                  onLoad={() => handleImageLoad(service.id)}
+                                />
+                              ) : (
+                                <div className="w-full h-64 lg:h-full bg-slate-200 rounded-lg shadow-lg flex items-center justify-center relative z-10">
+                                  <div className="text-slate-400 text-center">
+                                    <div className="w-12 h-12 mx-auto mb-2 bg-slate-300 rounded-lg flex items-center justify-center">
+                                      <span className="text-slate-500 font-bold text-sm">IMG</span>
+                                    </div>
+                                    <p className="text-xs">No Image</p>
+                                  </div>
+                                </div>
+                              )}
                             </div>
 
                             {/* Description text that wraps around image */}
@@ -286,20 +343,31 @@ export default function ServicesPage() {
                         >
                         {/* Image Section - Collapsed */}
                         <div className="relative overflow-hidden h-56">
-                          <Image
-                            src={service.image}
-                            alt={service.name}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            className="object-cover group-hover:scale-110 transition-transform duration-700"
-                            priority={index === 0}
-                          />
+                          {service.image ? (
+                            <Image
+                              src={service.image}
+                              alt={service.title}
+                              fill
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              className="object-cover group-hover:scale-110 transition-transform duration-700"
+                              priority={index === 0}
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-slate-200 flex items-center justify-center">
+                              <div className="text-slate-400 text-center">
+                                <div className="w-12 h-12 mx-auto mb-2 bg-slate-300 rounded-lg flex items-center justify-center">
+                                  <span className="text-slate-500 font-bold text-sm">IMG</span>
+                                </div>
+                                <p className="text-xs">No Image</p>
+                              </div>
+                            </div>
+                          )}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                           {/* Service Title Overlay */}
                           <div className="absolute bottom-0 left-0 right-0 p-6">
                             <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-custom-yellow transition-colors duration-300">
-                              {service.name}
+                              {service.title}
                             </h3>
                           </div>
                         </div>
@@ -332,10 +400,9 @@ export default function ServicesPage() {
                   </motion.div>
                 </motion.div>
               );
-            })}
-          </div>
-
-
+              })}
+            </div>
+          )}
 
           {/* Industry Accreditations Section */}
           <motion.div
