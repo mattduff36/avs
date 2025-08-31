@@ -7,15 +7,28 @@ import { ArrowRight, Wrench, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useState, useEffect } from "react";
+import ForSaleBadge from "@/components/ForSaleBadge";
 
-const machinesData = [
+interface Machine {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  features: string[];
+  side: 'left' | 'right';
+  forSale: boolean;
+}
+
+// Default machines data (fallback)
+const defaultMachinesData: Machine[] = [
   {
     id: 1,
     title: "Komatsu D61 PXi",
     description: "The Intelligent Machine Control (iMC) on the D61 improves efficiency and reduces cost to our customers in any application. The iMC allows automated operation from heavy dozing to fine grading. Our Komatsu D61 PXi dozers are available for contracted works and short or long-term hire.",
     image: "/images/komatsu-d61-pxi.jpg",
     features: ["Intelligent Machine Control", "Heavy dozing to fine grading", "Available for hire"],
-    side: "left"
+    side: "left",
+    forSale: false
   },
   {
     id: 2,
@@ -23,7 +36,8 @@ const machinesData = [
     description: "We have a choice of Komatsu excavators with Komatsu's intelligent machine control technology, meaning whatever the job we will have the right machine to ensure our customers projects are completed to highest accuracy and in a fraction of the time compared to conventional methods. Onboard weighing will optimize loading, ensuring every truck load is road legal and filled to its full capacity.",
     image: "/images/komatsu-intelligent-control.jpg",
     features: ["Multiple excavator options", "Highest accuracy", "Onboard weighing system"],
-    side: "right"
+    side: "right",
+    forSale: false
   },
   {
     id: 3,
@@ -31,7 +45,8 @@ const machinesData = [
     description: "Our high-performance Dual View Dumpers allow the driver to quickly change the seat position through a 180 degrees to ensure that the operator always has the best view, whether loading or during transportation. This helps save time on site and ensures maximum safety.",
     image: "/images/dual-view-dumpers.jpg",
     features: ["180-degree seat rotation", "Maximum safety", "Time-saving design"],
-    side: "left"
+    side: "left",
+    forSale: false
   },
   {
     id: 4,
@@ -39,7 +54,8 @@ const machinesData = [
     description: "The McCloskey Screener and Trommel are essential pieces of equipment for efficient material separation and screening. The screener is designed to handle a variety of materials, providing high throughput excellent performance in various applications. Meanwhile, the trommel offers a rotating drum that effectively separates materials based on size, ensuring optimal sorting and processing.",
     image: "/images/mccloskey-screener.webp",
     features: ["Material separation", "High throughput", "Optimal sorting"],
-    side: "right"
+    side: "right",
+    forSale: false
   },
   {
     id: 5,
@@ -47,7 +63,8 @@ const machinesData = [
     description: "A loading shovel, also known as a front-end loader, is a versatile piece of heavy machinery commonly used in construction, agriculture, and material handling. It is primarily utilised for moving bulk materials as soil, gravel, and sand, making it ideal for tasks like loading trucks, clearing debris, and digging trenches. We can provide loading shovels for hire either operated or on a self drive basis.",
     image: "/images/loading-shovels.jpg",
     features: ["Versatile machinery", "Bulk material handling", "Operated or self-drive"],
-    side: "left"
+    side: "left",
+    forSale: false
   },
   {
     id: 6,
@@ -55,13 +72,18 @@ const machinesData = [
     description: "Our ATV hire service for construction sites provides reliable and durable all-terrain vehicles to enhance your project efficiency. Designed to navigate rough terrains and heavy loads, our ATVs help transport materials and personnel with ease. Each vehicle is well-maintained and equipped to handle the demands of any construction environment.",
     image: "/images/all-terrain-vehicles.jpg",
     features: ["Rough terrain navigation", "Material transport", "Well-maintained fleet"],
-    side: "right"
+    side: "right",
+    forSale: false
   }
 ];
 
 export default function MachinesPage() {
+  const [machines, setMachines] = useState<Machine[]>(defaultMachinesData);
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
   const [isModalLoading, setIsModalLoading] = useState(false);
+
+  // For now, use default data to avoid SSR issues
+  // TODO: Implement client-side data fetching for sale status
 
   // iOS viewport height fix
   useEffect(() => {
@@ -128,14 +150,14 @@ export default function MachinesPage() {
       {/* Machines Sections */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          {machinesData.map((machine, index) => (
+          {machines.map((machine, index) => (
             <motion.div
               key={machine.id}
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className={`mb-32 ${index === machinesData.length - 1 ? 'mb-0' : ''}`}
+              className={`mb-32 ${index === machines.length - 1 ? 'mb-0' : ''}`}
             >
               <div className={`grid grid-cols-1 lg:grid-cols-2 gap-16 items-center ${
                 machine.side === 'right' ? 'lg:grid-flow-col-dense' : ''
@@ -208,6 +230,9 @@ export default function MachinesPage() {
                             sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-cover transition-transform duration-700 group-hover:scale-110"
                           />
+                          
+                          {/* For Sale Badge */}
+                          {machine.forSale && <ForSaleBadge />}
                           
                           {/* Gradient overlay for better text contrast */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>

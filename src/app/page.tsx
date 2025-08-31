@@ -1,5 +1,6 @@
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
+import MachinesForSaleSection from "@/components/sections/MachinesForSaleSection";
 import { generateSEO, getOrganizationStructuredData, getWebsiteStructuredData } from "@/lib/seo";
 import { Metadata } from "next";
 
@@ -15,6 +16,7 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <MachinesForSaleSection />
       <ServicesSection />
       
       {/* Structured Data */}
