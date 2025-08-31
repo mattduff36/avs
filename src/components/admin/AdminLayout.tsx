@@ -74,7 +74,7 @@ export default function AdminLayout({ children, currentPage = "dashboard" }: Adm
       </div>
 
       {/* Header */}
-      <header className="relative z-10 bg-white/10 backdrop-blur-sm shadow-sm border-b border-white/20">
+      <header className="relative z-[10000] bg-white/10 backdrop-blur-sm shadow-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo and Admin Title */}
@@ -134,7 +134,7 @@ export default function AdminLayout({ children, currentPage = "dashboard" }: Adm
             </div>
 
             {/* Mobile Menu */}
-            <div className="lg:hidden relative mobile-menu-container z-[9999]">
+            <div className="lg:hidden relative mobile-menu-container z-[10001]">
               <Button
                 variant="outline"
                 size="icon"
@@ -152,7 +152,7 @@ export default function AdminLayout({ children, currentPage = "dashboard" }: Adm
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full right-0 mt-2 w-56 bg-slate-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 py-2 z-[9999]"
+                    className="absolute top-full right-0 mt-2 w-56 bg-slate-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 py-2 z-[10001]"
                   >
                     <nav className="space-y-1">
                       {navigationItems.map((item) => {
@@ -208,7 +208,7 @@ export default function AdminLayout({ children, currentPage = "dashboard" }: Adm
       </header>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 flex-1">
+      <main className="relative z-0 max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 flex-1">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
