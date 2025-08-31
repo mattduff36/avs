@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hasMachinesForSale, setHasMachinesForSale] = useState(false);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -46,6 +47,42 @@ export function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Check for machines for sale
+  useEffect(() => {
+    const checkMachinesForSale = async () => {
+      try {
+        const response = await fetch('/api/admin/machines?forSale=true');
+        if (response.ok) {
+          const data = await response.json();
+          const forSaleMachines = data.data || [];
+          setHasMachinesForSale(forSaleMachines.length > 0);
+        }
+      } catch (error) {
+        console.warn('Error checking machines for sale:', error);
+      }
+    };
+
+    checkMachinesForSale();
+  }, []);
+
+  // Create dynamic navigation with "For Sale" link when appropriate
+  const navigationItems = React.useMemo(() => {
+    const items = [...siteData.navigation];
+    
+    if (hasMachinesForSale) {
+      // Insert "For Sale" after "Our Machines"
+      const machinesIndex = items.findIndex(item => item.href === '/machines');
+      if (machinesIndex !== -1) {
+        items.splice(machinesIndex + 1, 0, {
+          label: "For Sale",
+          href: "/machines?forSale=true",
+        });
+      }
+    }
+    
+    return items;
+  }, [hasMachinesForSale]);
 
   return (
     <motion.header
@@ -105,7 +142,7 @@ export function Header() {
           <div className="flex items-center space-x-1">
             <NavigationMenu className="hidden lg:flex">
               <NavigationMenuList>
-                {siteData.navigation.map((item) => (
+                {navigationItems.map((item) => (
                   <NavigationMenuItem key={item.label}>
                     <NavigationMenuLink asChild>
                       {item.external ? (
@@ -154,7 +191,7 @@ export function Header() {
                   className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-2 z-50"
                 >
                   <nav className="space-y-1">
-                    {siteData.navigation.map((item) => (
+                    {navigationItems.map((item) => (
                       <div key={item.label}>
                         {item.external ? (
                           <a

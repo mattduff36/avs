@@ -1,5 +1,4 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import { getFromStorage, setInStorage } from './storage';
 
 // Default machines data (fallback)
 const defaultMachinesData = [
@@ -51,9 +50,9 @@ const defaultMachinesData = [
   {
     id: 6,
     title: "All Terrain Vehicles",
-    description: "Our ATV hire service for construction sites provides reliable and durable all-terrain vehicles to enhance your project efficiency. Designed to navigate rough terrains and heavy loads, our ATVs help transport materials and personnel with ease. Each vehicle is well-maintained and equipped to handle the demands of any construction environment.",
+    description: "Our All Terrain Vehicles (ATVs) are perfect for navigating challenging landscapes and accessing remote areas. These versatile machines are ideal for site surveys, equipment transportation, and maintenance tasks in difficult terrain. Available for short-term and long-term hire with experienced operators if required.",
     image: "/images/all-terrain-vehicles.jpg",
-    features: ["Rough terrain navigation", "Material transport", "Well-maintained fleet"],
+    features: ["All terrain capability", "Site surveys", "Equipment transportation"],
     side: "right" as const,
     forSale: false
   }
@@ -75,49 +74,43 @@ export interface MachinesForSaleData {
   version: string;
 }
 
-const MACHINES_FOR_SALE_FILE = path.join(process.cwd(), 'src', 'data', 'machines-for-sale.json');
+export interface MachineEditableData {
+  id: number;
+  description: string;
+  features: string[];
+}
+
+export interface MachinesEditableData {
+  machines: Record<number, MachineEditableData>; // machineId -> editable data
+  lastUpdated: string | null;
+  version: string;
+}
+
+// Storage keys
+const MACHINES_FOR_SALE_KEY = 'machines-for-sale';
+const MACHINES_EDITABLE_KEY = 'machines-editable';
 
 /**
- * Reads the machines for sale data from JSON file
+ * Reads the machines for sale data from storage
  */
 export async function readMachinesForSaleData(): Promise<MachinesForSaleData> {
-  try {
-    const fileContent = await fs.readFile(MACHINES_FOR_SALE_FILE, 'utf-8');
-    const data: MachinesForSaleData = JSON.parse(fileContent);
-    
-    // Validate data structure
-    if (!data.machines || !data.version) {
-      throw new Error('Invalid data structure');
-    }
-    
-    return data;
-  } catch (error) {
-    // If file doesn't exist or is corrupted, return default structure
-    console.warn('Could not read machines for sale data, using default:', error);
-    return {
-      machines: {},
-      lastUpdated: null,
-      version: "1.0"
-    };
-  }
+  const defaultData: MachinesForSaleData = {
+    machines: {},
+    lastUpdated: null,
+    version: "1.0"
+  };
+  
+  return await getFromStorage(MACHINES_FOR_SALE_KEY, defaultData);
 }
 
 /**
- * Writes the machines for sale data to JSON file
+ * Writes the machines for sale data to storage
  */
 export async function writeMachinesForSaleData(data: MachinesForSaleData): Promise<void> {
-  try {
-    // Update timestamp
-    data.lastUpdated = new Date().toISOString();
-    
-    // Write to file atomically
-    const tempFile = MACHINES_FOR_SALE_FILE + '.tmp';
-    await fs.writeFile(tempFile, JSON.stringify(data, null, 2), 'utf-8');
-    await fs.rename(tempFile, MACHINES_FOR_SALE_FILE);
-  } catch (error) {
-    console.error('Error writing machines for sale data:', error);
-    throw new Error('Failed to save machine sale status');
-  }
+  // Update timestamp
+  data.lastUpdated = new Date().toISOString();
+  
+  await setInStorage(MACHINES_FOR_SALE_KEY, data);
 }
 
 /**
@@ -144,29 +137,87 @@ export async function getMachineSaleStatus(machineId: number): Promise<boolean> 
 }
 
 /**
- * Gets all machines with their sale status merged
- */
-export async function getMachinesWithSaleStatus(): Promise<MachineForSale[]> {
-  const data = await readMachinesForSaleData();
-  
-  return defaultMachinesData.map(machine => ({
-    ...machine,
-    forSale: !!data.machines[machine.id]
-  }));
-}
-
-/**
- * Gets only machines that are for sale
+ * Gets all machines that are currently for sale
  */
 export async function getMachinesForSale(): Promise<MachineForSale[]> {
-  const allMachines = await getMachinesWithSaleStatus();
-  return allMachines.filter(machine => machine.forSale);
+  const saleData = await readMachinesForSaleData();
+  const editableData = await readMachinesEditableData();
+  
+  return defaultMachinesData
+    .filter(machine => saleData.machines[machine.id])
+    .map(machine => {
+      const editableInfo = editableData.machines[machine.id];
+      return {
+        ...machine,
+        description: editableInfo?.description || machine.description,
+        features: editableInfo?.features || machine.features,
+        forSale: true
+      };
+    });
 }
 
 /**
- * Checks if any machines are currently for sale
+ * Checks if there are any machines for sale
  */
 export async function hasMachinesForSale(): Promise<boolean> {
   const data = await readMachinesForSaleData();
   return Object.keys(data.machines).length > 0;
+}
+
+/**
+ * Reads the machines editable data from storage
+ */
+export async function readMachinesEditableData(): Promise<MachinesEditableData> {
+  const defaultData: MachinesEditableData = {
+    machines: {},
+    lastUpdated: null,
+    version: "1.0"
+  };
+  
+  return await getFromStorage(MACHINES_EDITABLE_KEY, defaultData);
+}
+
+/**
+ * Writes the machines editable data to storage
+ */
+export async function writeMachinesEditableData(data: MachinesEditableData): Promise<void> {
+  // Update timestamp
+  data.lastUpdated = new Date().toISOString();
+  
+  await setInStorage(MACHINES_EDITABLE_KEY, data);
+}
+
+/**
+ * Updates the editable data for a specific machine
+ */
+export async function updateMachineEditableData(machineId: number, description: string, features: string[]): Promise<void> {
+  const data = await readMachinesEditableData();
+  
+  data.machines[machineId] = {
+    id: machineId,
+    description,
+    features
+  };
+  
+  await writeMachinesEditableData(data);
+}
+
+/**
+ * Gets all machines with their sale status and editable content merged
+ */
+export async function getMachinesWithSaleStatus(): Promise<MachineForSale[]> {
+  const [saleData, editableData] = await Promise.all([
+    readMachinesForSaleData(),
+    readMachinesEditableData()
+  ]);
+  
+  return defaultMachinesData.map(machine => {
+    const editableInfo = editableData.machines[machine.id];
+    return {
+      ...machine,
+      description: editableInfo?.description || machine.description,
+      features: editableInfo?.features || machine.features,
+      forSale: !!saleData.machines[machine.id]
+    };
+  });
 }

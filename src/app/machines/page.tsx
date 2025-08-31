@@ -7,6 +7,7 @@ import { ArrowRight, Wrench, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import ForSaleBadge from "@/components/ForSaleBadge";
 
 interface Machine {
@@ -78,12 +79,45 @@ const defaultMachinesData: Machine[] = [
 ];
 
 export default function MachinesPage() {
+  const searchParams = useSearchParams();
+  const forSaleOnly = searchParams.get('forSale') === 'true';
+  
+  const [allMachines, setAllMachines] = useState<Machine[]>(defaultMachinesData);
   const [machines, setMachines] = useState<Machine[]>(defaultMachinesData);
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
   const [isModalLoading, setIsModalLoading] = useState(false);
 
-  // For now, use default data to avoid SSR issues
-  // TODO: Implement client-side data fetching for sale status
+  // Fetch machine data with sale status
+  useEffect(() => {
+    const fetchMachines = async () => {
+      try {
+        const response = await fetch('/api/admin/machines');
+        if (response.ok) {
+          const data = await response.json();
+          setAllMachines(data.data || defaultMachinesData);
+        } else {
+          console.warn('Failed to fetch machines data, using default');
+          setAllMachines(defaultMachinesData);
+        }
+      } catch (error) {
+        console.warn('Error fetching machines data:', error);
+        setAllMachines(defaultMachinesData);
+      } finally {
+        // Loading complete
+      }
+    };
+
+    fetchMachines();
+  }, []);
+
+  // Filter machines based on URL parameters
+  useEffect(() => {
+    if (forSaleOnly) {
+      setMachines(allMachines.filter(machine => machine.forSale));
+    } else {
+      setMachines(allMachines);
+    }
+  }, [allMachines, forSaleOnly]);
 
   // iOS viewport height fix
   useEffect(() => {
@@ -137,11 +171,18 @@ export default function MachinesPage() {
             className="max-w-4xl mx-auto text-center"
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Our <span className="text-custom-yellow">Machines</span>
+              {forSaleOnly ? (
+                <>Machines <span className="text-custom-yellow">For Sale</span></>
+              ) : (
+                <>Our <span className="text-custom-yellow">Machines</span></>
+              )}
             </h1>
             <p className="text-xl text-grey-300 leading-relaxed">
-              A new level in productivity and accuracy - we are constantly investing in our machines, 
-              including GPS excavators, bulldozers, and dual view dumpers for the highest accuracy and safety.
+              {forSaleOnly ? (
+                "Browse our available equipment for purchase. These machines are ready for immediate delivery and come with our full support and warranty."
+              ) : (
+                "A new level in productivity and accuracy - we are constantly investing in our machines, including GPS excavators, bulldozers, and dual view dumpers for the highest accuracy and safety."
+              )}
             </p>
           </motion.div>
         </div>
@@ -171,10 +212,17 @@ export default function MachinesPage() {
                       <div className="w-12 h-12 bg-custom-yellow rounded-lg flex items-center justify-center text-slate-900">
                         <Wrench className="h-6 w-6" />
                       </div>
-                      <div>
+                      <div className="flex items-center space-x-3">
                         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
                           {machine.title}
                         </h2>
+                        {machine.forSale && (
+                          <div className="relative">
+                            <div className="bg-custom-yellow text-slate-900 px-3 py-1 rounded-md shadow-lg border-2 border-white transform -rotate-3">
+                              <span className="text-sm font-bold tracking-wide">FOR SALE</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                     

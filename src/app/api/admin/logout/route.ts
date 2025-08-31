@@ -1,16 +1,30 @@
-import { NextResponse } from 'next/server';
-import { clearSessionCookie } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
+import { logAdminLogout } from '@/lib/admin-activity';
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
+    // Try to get session info from cookie to log logout
+    try {
+      const sessionCookie = request.cookies.get('admin_session');
+      if (sessionCookie) {
+        const session = JSON.parse(sessionCookie.value);
+        if (session.id) {
+          await logAdminLogout(session.id);
+        }
+      }
+    } catch (error) {
+      // Continue with logout even if logging fails
+      console.warn('Failed to log logout:', error);
+    }
+    
     // Create response
     const response = NextResponse.json(
       { message: 'Logout successful' },
       { status: 200 }
     );
 
-    // Clear session cookie
-    await clearSessionCookie();
+    // Clear session cookie directly on the response
+    response.cookies.delete('admin_session');
 
     return response;
   } catch (error) {

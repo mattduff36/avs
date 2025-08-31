@@ -10,6 +10,7 @@ const SESSION_COOKIE_NAME = 'admin_session';
 const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 export interface AdminSession {
+  id: string;
   username: string;
   loggedInAt: number;
   expiresAt: number;
@@ -28,6 +29,7 @@ export function validateCredentials(username: string, password: string): boolean
 export function createSession(username: string): AdminSession {
   const now = Date.now();
   return {
+    id: `session_${now}_${Math.random().toString(36).substr(2, 9)}`,
     username,
     loggedInAt: now,
     expiresAt: now + SESSION_DURATION,

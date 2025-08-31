@@ -5,10 +5,45 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Users, Wrench, FolderOpen, Truck } from "lucide-react";
+import { ArrowRight, Users, Wrench, FolderOpen, Truck, Tag, LucideIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import ForSaleBadge from "@/components/ForSaleBadge";
 
 export function ServicesSection() {
-  const pageSections = [
+  const [hasMachinesForSale, setHasMachinesForSale] = useState(false);
+  const [machinesForSaleCount, setMachinesForSaleCount] = useState(0);
+
+  useEffect(() => {
+    const checkMachinesForSale = async () => {
+      try {
+        const response = await fetch('/api/admin/machines?forSale=true');
+        if (response.ok) {
+          const data = await response.json();
+          const forSaleMachines = data.data || [];
+          setMachinesForSaleCount(forSaleMachines.length);
+          setHasMachinesForSale(forSaleMachines.length > 0);
+        }
+      } catch (error) {
+        console.warn('Error checking machines for sale:', error);
+      }
+    };
+
+    checkMachinesForSale();
+  }, []);
+
+  interface Section {
+    id: string;
+    title: string;
+    subtitle: string;
+    description: string;
+    image: string;
+    icon: LucideIcon;
+    link: string;
+    features: string[];
+    isForSale?: boolean;
+  }
+
+  const pageSections: Section[] = [
     {
       id: "about",
       title: "About Us",
@@ -51,6 +86,22 @@ export function ServicesSection() {
     }
   ];
 
+  // Add machines for sale section if there are machines for sale
+  const allSections = hasMachinesForSale ? [
+    ...pageSections,
+    {
+      id: "machines-for-sale",
+      title: "Machines for Sale",
+      subtitle: "Equipment Available",
+      description: `Browse our ${machinesForSaleCount} machine${machinesForSaleCount !== 1 ? 's' : ''} currently available for purchase. Quality equipment ready for immediate delivery with full support and warranty.`,
+      image: "/images/komatsu-d61-pxi.jpg",
+      icon: Tag,
+      link: "/machines?forSale=true",
+      features: [`${machinesForSaleCount} Machine${machinesForSaleCount !== 1 ? 's' : ''} Available`, "Immediate Delivery", "Full Warranty", "Professional Support"],
+      isForSale: true
+    }
+  ] : pageSections;
+
   return (
     <section className="py-20 bg-gradient-to-br from-slate-50 to-white">
       <div className="container mx-auto px-4">
@@ -73,7 +124,7 @@ export function ServicesSection() {
 
         {/* Page Sections Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-          {pageSections.map((section, index) => (
+          {allSections.map((section, index) => (
             <motion.div
               key={section.id}
               initial={{ opacity: 0, y: 30 }}
@@ -93,7 +144,8 @@ export function ServicesSection() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                     
-
+                    {/* For Sale Badge */}
+                    {section.isForSale && <ForSaleBadge />}
 
                     {/* Overlay Content */}
                     <div className="absolute bottom-0 left-0 right-0 p-8 text-white">

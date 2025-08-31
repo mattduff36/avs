@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateCredentials, createSession, setSessionCookie } from '@/lib/auth';
+import { validateCredentials, createSession } from '@/lib/auth';
+import { logAdminLogin } from '@/lib/admin-activity';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,6 +26,14 @@ export async function POST(request: NextRequest) {
     // Create session
     const session = createSession(username);
     
+    // Log the login activity
+    const ipAddress = request.headers.get('x-forwarded-for') || 
+                     request.headers.get('x-real-ip') || 
+                     'unknown';
+    const userAgent = request.headers.get('user-agent') || 'unknown';
+    
+    await logAdminLogin(ipAddress, userAgent);
+    
     // Create response
     const response = NextResponse.json(
       { 
@@ -34,8 +43,14 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
 
-    // Set session cookie
-    await setSessionCookie(session);
+    // Set session cookie directly on the response
+    response.cookies.set('admin_session', JSON.stringify(session), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60, // 24 hours in seconds
+      path: '/',
+    });
 
     return response;
   } catch (error) {

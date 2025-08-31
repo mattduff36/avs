@@ -34,7 +34,7 @@ export default function AdminLoginPage() {
         const data = await response.json();
         setError(data.message || "Login failed");
       }
-    } catch (error) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);

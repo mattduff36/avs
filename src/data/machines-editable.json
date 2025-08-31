@@ -1,0 +1,15 @@
+{
+  "machines": {
+    "1": {
+      "id": 1,
+      "description": "The Intelligent Machine Control (iMC) on the D61 improves efficiency and reduces cost to our customers in any application. The iMC allows automated operation from heavy dozing to fine grading. Our Komatsu D61 PXi dozers are available for contracted works and short or long-term hire.",
+      "features": [
+        "Intelligent Machine Control",
+        "Heavy dozing to fine grading",
+        "Available for hire"
+      ]
+    }
+  },
+  "lastUpdated": "2025-08-31T15:18:16.534Z",
+  "version": "1.0"
+}
