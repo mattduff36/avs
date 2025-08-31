@@ -11,18 +11,13 @@ import {
   Briefcase,
   FolderOpen,
   Wrench,
-  Clock,
-  Calendar,
-  AlertCircle
+  Calendar
 } from "lucide-react";
-
-
 
 interface AdminStats {
   totalSessions: number;
   totalChanges: number;
   lastLogin?: string;
-  averageSessionDuration?: number;
   changesThisWeek: number;
 }
 
@@ -54,8 +49,6 @@ export default function AdminDashboard() {
   const [recentSessions, setRecentSessions] = useState<AdminSession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [isMigrating, setIsMigrating] = useState(false);
-  const [migrationMessage, setMigrationMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
     fetchDashboardData();
@@ -100,45 +93,6 @@ export default function AdminDashboard() {
     return `${hours}h ${remainingMinutes}m`;
   };
 
-  const handleMigration = async () => {
-    setIsMigrating(true);
-    setMigrationMessage(null);
-    
-    try {
-      const response = await fetch('/api/admin/migrate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ type: 'all' }),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setMigrationMessage({
-          type: 'success',
-          text: `Migration completed! Imported ${result.data.machines.count} machines, ${result.data.services.count} services, and ${result.data.projects.count} projects.`
-        });
-        // Refresh dashboard data
-        fetchDashboardData();
-      } else {
-        setMigrationMessage({
-          type: 'error',
-          text: result.message || 'Migration failed'
-        });
-      }
-    } catch (error) {
-      console.error('Migration error:', error);
-      setMigrationMessage({
-        type: 'error',
-        text: 'Migration failed: Network error'
-      });
-    } finally {
-      setIsMigrating(false);
-    }
-  };
-
   if (isLoading) {
     return (
       <AdminLayout>
@@ -153,7 +107,7 @@ export default function AdminDashboard() {
     return (
       <AdminLayout>
         <div className="text-center py-12">
-          <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
+          <div className="h-12 w-12 text-red-400 mx-auto mb-4">⚠️</div>
           <h2 className="text-xl font-semibold text-white mb-2">Error Loading Dashboard</h2>
           <p className="text-slate-300 mb-4">{error}</p>
           <button
@@ -273,49 +227,8 @@ export default function AdminDashboard() {
         </div>
       </motion.div>
 
-      {/* Migration Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-        className="bg-white/10 backdrop-blur-sm rounded-lg shadow-sm border border-white/20 mb-8"
-      >
-        <div className="px-6 py-4 border-b border-white/20">
-          <h2 className="text-lg font-semibold text-white">Data Migration</h2>
-          <p className="text-sm text-slate-300">Import existing machines, services, and projects from site data</p>
-        </div>
-        
-        <div className="p-6">
-          {migrationMessage && (
-            <div className={`mb-4 p-3 rounded-lg border flex items-center space-x-2 ${
-              migrationMessage.type === 'success'
-                ? 'bg-green-500/10 border-green-500/20 text-green-400'
-                : 'bg-red-500/10 border-red-500/20 text-red-400'
-            }`}>
-              <span>{migrationMessage.text}</span>
-            </div>
-          )}
-          
-          <button
-            onClick={handleMigration}
-            disabled={isMigrating}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              isMigrating
-                ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
-                : 'bg-custom-yellow hover:bg-custom-yellow-hover text-slate-900'
-            }`}
-          >
-            {isMigrating ? 'Migrating...' : 'Import Site Data'}
-          </button>
-          
-          <p className="text-xs text-slate-400 mt-2">
-            This will import all existing machines, services, and projects into the dynamic content system.
-          </p>
-        </div>
-      </motion.div>
-
       {/* Activity Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -363,23 +276,6 @@ export default function AdminDashboard() {
             <div className="ml-4">
               <p className="text-sm font-medium text-slate-300">Changes This Week</p>
               <p className="text-2xl font-bold text-white">{adminStats.changesThisWeek}</p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.9 }}
-          className="bg-white/10 backdrop-blur-sm rounded-lg shadow-sm border border-white/20 p-6"
-        >
-          <div className="flex items-center">
-            <div className="p-2 bg-yellow-500/20 rounded-lg">
-              <Clock className="h-6 w-6 text-yellow-400" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-slate-300">Avg Session</p>
-              <p className="text-2xl font-bold text-white">{formatDuration(adminStats.averageSessionDuration)}</p>
             </div>
           </div>
         </motion.div>
@@ -463,8 +359,6 @@ export default function AdminDashboard() {
           </div>
         </motion.div>
       </div>
-
-
     </AdminLayout>
   );
 }
