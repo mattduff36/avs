@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { AlertCircle, CheckCircle, Loader2, Plus, Edit, Trash2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
@@ -19,6 +21,7 @@ export default function AdminMachinesPage() {
   const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [isTogglingForSale, setIsTogglingForSale] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
@@ -62,6 +65,39 @@ export default function AdminMachinesPage() {
   const handleEdit = (machine: Machine) => {
     setSelectedMachine(machine);
     setIsFormOpen(true);
+  };
+
+  const handleToggleForSale = async (machine: Machine, forSale: boolean) => {
+    setIsTogglingForSale(machine.id);
+    try {
+      const formData = new FormData();
+      formData.append('id', machine.id);
+      formData.append('forSale', forSale.toString());
+
+      const response = await fetch('/api/admin/dynamic/machines', {
+        method: 'PUT',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setMachines(prev => prev.map(m => 
+          m.id === machine.id ? { ...m, forSale } : m
+        ));
+        setMessage({ 
+          type: 'success', 
+          text: `Machine ${forSale ? 'marked as for sale' : 'removed from sale'}` 
+        });
+      } else {
+        setMessage({ type: 'error', text: result.message || 'Failed to update machine' });
+      }
+    } catch (error) {
+      console.error('Error toggling for sale status:', error);
+      setMessage({ type: 'error', text: 'Error updating machine' });
+    } finally {
+      setIsTogglingForSale(null);
+    }
   };
 
   const handleDelete = async (machine: Machine) => {
@@ -202,16 +238,32 @@ export default function AdminMachinesPage() {
                         Layout: {machine.side === 'left' ? 'Left' : 'Right'} side
                       </CardDescription>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEdit(machine)}
-                        className="border-custom-yellow text-custom-yellow hover:bg-custom-yellow hover:text-slate-900"
-                      >
-                        <Edit className="h-4 w-4 mr-1" />
-                        Edit
-                      </Button>
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2">
+                        <Label htmlFor={`forSale-${machine.id}`} className="text-sm text-slate-300">
+                          For Sale
+                        </Label>
+                        <Switch
+                          id={`forSale-${machine.id}`}
+                          checked={machine.forSale}
+                          onCheckedChange={(checked) => handleToggleForSale(machine, checked)}
+                          disabled={isTogglingForSale === machine.id}
+                        />
+                        {isTogglingForSale === machine.id && (
+                          <Loader2 className="h-4 w-4 animate-spin text-custom-yellow" />
+                        )}
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEdit(machine)}
+                          className="border-custom-yellow text-custom-yellow hover:bg-custom-yellow hover:text-slate-900"
+                        >
+                          <Edit className="h-4 w-4 mr-1" />
+                          Edit
+                        </Button>
+                      </div>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button

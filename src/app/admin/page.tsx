@@ -54,6 +54,8 @@ export default function AdminDashboard() {
   const [recentSessions, setRecentSessions] = useState<AdminSession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isMigrating, setIsMigrating] = useState(false);
+  const [migrationMessage, setMigrationMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
     fetchDashboardData();
@@ -96,6 +98,45 @@ export default function AdminDashboard() {
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     return `${hours}h ${remainingMinutes}m`;
+  };
+
+  const handleMigration = async () => {
+    setIsMigrating(true);
+    setMigrationMessage(null);
+    
+    try {
+      const response = await fetch('/api/admin/migrate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type: 'all' }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setMigrationMessage({
+          type: 'success',
+          text: `Migration completed! Imported ${result.data.machines.count} machines, ${result.data.services.count} services, and ${result.data.projects.count} projects.`
+        });
+        // Refresh dashboard data
+        fetchDashboardData();
+      } else {
+        setMigrationMessage({
+          type: 'error',
+          text: result.message || 'Migration failed'
+        });
+      }
+    } catch (error) {
+      console.error('Migration error:', error);
+      setMigrationMessage({
+        type: 'error',
+        text: 'Migration failed: Network error'
+      });
+    } finally {
+      setIsMigrating(false);
+    }
   };
 
   if (isLoading) {
@@ -229,6 +270,47 @@ export default function AdminDashboard() {
               </motion.div>
             </Link>
           </div>
+        </div>
+      </motion.div>
+
+      {/* Migration Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="bg-white/10 backdrop-blur-sm rounded-lg shadow-sm border border-white/20 mb-8"
+      >
+        <div className="px-6 py-4 border-b border-white/20">
+          <h2 className="text-lg font-semibold text-white">Data Migration</h2>
+          <p className="text-sm text-slate-300">Import existing machines, services, and projects from site data</p>
+        </div>
+        
+        <div className="p-6">
+          {migrationMessage && (
+            <div className={`mb-4 p-3 rounded-lg border flex items-center space-x-2 ${
+              migrationMessage.type === 'success'
+                ? 'bg-green-500/10 border-green-500/20 text-green-400'
+                : 'bg-red-500/10 border-red-500/20 text-red-400'
+            }`}>
+              <span>{migrationMessage.text}</span>
+            </div>
+          )}
+          
+          <button
+            onClick={handleMigration}
+            disabled={isMigrating}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              isMigrating
+                ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                : 'bg-custom-yellow hover:bg-custom-yellow-hover text-slate-900'
+            }`}
+          >
+            {isMigrating ? 'Migrating...' : 'Import Site Data'}
+          </button>
+          
+          <p className="text-xs text-slate-400 mt-2">
+            This will import all existing machines, services, and projects into the dynamic content system.
+          </p>
         </div>
       </motion.div>
 
