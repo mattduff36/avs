@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { LogOut, Home, FileText, Briefcase, FolderOpen, Wrench } from "lucide-react";
+import { LogOut, Home, FileText, Briefcase, FolderOpen, Wrench, Menu, X } from "lucide-react";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -14,6 +14,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children, currentPage = "dashboard" }: AdminLayoutProps) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -70,8 +71,8 @@ export default function AdminLayout({ children, currentPage = "dashboard" }: Adm
               <h1 className="text-lg font-semibold text-white">Admin Panel</h1>
             </div>
 
-            {/* Navigation */}
-            <nav className="flex space-x-8">
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex space-x-8">
               {navigationItems.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -91,8 +92,8 @@ export default function AdminLayout({ children, currentPage = "dashboard" }: Adm
               })}
             </nav>
 
-            {/* Logout Button */}
-            <div className="flex items-center space-x-4">
+            {/* Desktop Logout Button */}
+            <div className="hidden lg:flex items-center space-x-4">
               <Button
                 onClick={handleLogout}
                 disabled={isLoggingOut}
@@ -112,12 +113,85 @@ export default function AdminLayout({ children, currentPage = "dashboard" }: Adm
                 )}
               </Button>
             </div>
+
+            {/* Mobile menu button */}
+            <div className="lg:hidden">
+              <Button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                variant="outline"
+                size="sm"
+                className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden bg-white/5 backdrop-blur-sm border-t border-white/20"
+          >
+            <div className="px-4 py-4 space-y-2">
+              {navigationItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                      item.current
+                        ? "bg-custom-yellow/20 text-white border-l-4 border-custom-yellow"
+                        : "text-slate-300 hover:text-white hover:bg-white/10"
+                    }`}
+                  >
+                    <Icon className="h-5 w-5 mr-3" />
+                    {item.name}
+                  </a>
+                );
+              })}
+              
+              {/* Mobile Logout Button */}
+              <div className="pt-4 border-t border-white/20">
+                <Button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleLogout();
+                  }}
+                  disabled={isLoggingOut}
+                  variant="outline"
+                  className="w-full bg-red-500 text-white border-red-500 hover:bg-red-600 hover:border-red-600"
+                >
+                  {isLoggingOut ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <span>Logging out...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <LogOut className="h-4 w-4" />
+                      <span>Logout</span>
+                    </div>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </header>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 flex-1">
+      <main className="relative z-10 max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 flex-1">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
