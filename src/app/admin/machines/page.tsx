@@ -224,7 +224,73 @@ export default function AdminMachinesPage() {
             {machines.map((machine) => (
               <Card key={machine.id} className="bg-slate-800/50 border-slate-600">
                 <CardHeader>
-                  <div className="flex justify-between items-start">
+                  <div className="space-y-3">
+                    {/* Controls Row - Top Right */}
+                    <div className="flex justify-end items-center gap-3">
+                      <div className="flex items-center space-x-2">
+                        <Label htmlFor={`forSale-${machine.id}`} className="text-sm text-slate-300">
+                          For Sale
+                        </Label>
+                        <Switch
+                          id={`forSale-${machine.id}`}
+                          checked={machine.forSale}
+                          onCheckedChange={(checked) => handleToggleForSale(machine, checked)}
+                          disabled={isTogglingForSale === machine.id}
+                          className="data-[state=checked]:bg-green-500"
+                        />
+                        {isTogglingForSale === machine.id && (
+                          <Loader2 className="h-4 w-4 animate-spin text-custom-yellow" />
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          onClick={() => handleEdit(machine)}
+                          className="bg-transparent border border-white/30 text-white hover:bg-white/10 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 h-auto"
+                        >
+                          <Edit className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                          Edit
+                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              disabled={isDeleting === machine.id}
+                              className="bg-red-500 text-white hover:bg-red-600 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 h-auto"
+                            >
+                              {isDeleting === machine.id ? (
+                                <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 animate-spin" />
+                              ) : (
+                                <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                              )}
+                              Delete
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent className="bg-slate-900 border-slate-600">
+                            <AlertDialogHeader>
+                              <AlertDialogTitle className="text-white">
+                                Delete Machine
+                              </AlertDialogTitle>
+                              <AlertDialogDescription className="text-slate-400">
+                                Are you sure you want to delete &quot;{machine.title}&quot;? This action cannot be undone and will also delete the associated image.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="border-slate-600 text-slate-300 hover:bg-slate-700">
+                                Cancel
+                              </AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(machine)}
+                                className="bg-red-500 text-white hover:bg-red-600"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </div>
+                    
+                    {/* Title and Badge Row - Left Aligned */}
                     <div className="space-y-1">
                       <CardTitle className="text-white flex items-center space-x-2">
                         <span>{machine.title}</span>
@@ -238,73 +304,8 @@ export default function AdminMachinesPage() {
                         Layout: {machine.side === 'left' ? 'Left' : 'Right'} side
                       </CardDescription>
                     </div>
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center space-x-2">
-                        <Label htmlFor={`forSale-${machine.id}`} className="text-sm text-slate-300">
-                          For Sale
-                        </Label>
-                        <Switch
-                          id={`forSale-${machine.id}`}
-                          checked={machine.forSale}
-                          onCheckedChange={(checked) => handleToggleForSale(machine, checked)}
-                          disabled={isTogglingForSale === machine.id}
-                        />
-                        {isTogglingForSale === machine.id && (
-                          <Loader2 className="h-4 w-4 animate-spin text-custom-yellow" />
-                        )}
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEdit(machine)}
-                          className="border-custom-yellow text-custom-yellow hover:bg-custom-yellow hover:text-slate-900"
-                        >
-                          <Edit className="h-4 w-4 mr-1" />
-                          Edit
-                        </Button>
-                      </div>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={isDeleting === machine.id}
-                            className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
-                          >
-                            {isDeleting === machine.id ? (
-                              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-                            ) : (
-                              <Trash2 className="h-4 w-4 mr-1" />
-                            )}
-                            Delete
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="bg-slate-900 border-slate-600">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="text-white">
-                              Delete Machine
-                            </AlertDialogTitle>
-                            <AlertDialogDescription className="text-slate-400">
-                              Are you sure you want to delete &quot;{machine.title}&quot;? This action cannot be undone and will also delete the associated image.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className="border-slate-600 text-slate-300 hover:bg-slate-700">
-                              Cancel
-                            </AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDelete(machine)}
-                              className="bg-red-500 text-white hover:bg-red-600"
-                            >
-                              Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                      </div>
-                    </div>
-                  </CardHeader>
+                  </div>
+                </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid md:grid-cols-3 gap-4">
                     {/* Image */}

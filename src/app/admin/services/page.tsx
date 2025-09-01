@@ -188,37 +188,26 @@ export default function AdminServicesPage() {
             {services.map((service) => (
               <Card key={service.id} className="bg-slate-800/50 border-slate-600">
                 <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div className="space-y-1">
-                      <CardTitle className="text-white flex items-center space-x-2">
-                        <span>{service.title}</span>
-                        <Badge variant="outline" className="border-custom-yellow text-custom-yellow">
-                          {service.icon}
-                        </Badge>
-                      </CardTitle>
-                    </div>
-                    <div className="flex items-center space-x-2">
+                  <div className="space-y-3">
+                    {/* Controls Row - Top Right */}
+                    <div className="flex justify-end items-center gap-2">
                       <Button
-                        variant="outline"
-                        size="sm"
                         onClick={() => handleEdit(service)}
-                        className="border-custom-yellow text-custom-yellow hover:bg-custom-yellow hover:text-slate-900"
+                        className="bg-transparent border border-white/30 text-white hover:bg-white/10 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 h-auto"
                       >
-                        <Edit className="h-4 w-4 mr-1" />
+                        <Edit className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         Edit
                       </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button
-                            variant="outline"
-                            size="sm"
                             disabled={isDeleting === service.id}
-                            className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
+                            className="bg-red-500 text-white hover:bg-red-600 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 h-auto"
                           >
                             {isDeleting === service.id ? (
-                              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                              <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 animate-spin" />
                             ) : (
-                              <Trash2 className="h-4 w-4 mr-1" />
+                              <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                             )}
                             Delete
                           </Button>
@@ -245,6 +234,16 @@ export default function AdminServicesPage() {
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
+                    </div>
+                    
+                    {/* Title and Badge Row - Left Aligned */}
+                    <div className="space-y-1">
+                      <CardTitle className="text-white flex items-center space-x-2">
+                        <span>{service.title}</span>
+                        <Badge variant="outline" className="border-custom-yellow text-custom-yellow">
+                          {service.icon}
+                        </Badge>
+                      </CardTitle>
                     </div>
                   </div>
                 </CardHeader>

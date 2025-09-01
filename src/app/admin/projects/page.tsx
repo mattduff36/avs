@@ -196,47 +196,26 @@ export default function AdminProjectsPage() {
             {projects.map((project) => (
               <Card key={project.id} className="bg-slate-800/50 border-slate-600">
                 <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div className="space-y-1">
-                      <CardTitle className="text-white flex items-center space-x-2">
-                        <span>{project.title}</span>
-                        <Badge variant="outline" className="border-custom-yellow text-custom-yellow">
-                          {project.category}
-                        </Badge>
-                      </CardTitle>
-                      <div className="flex items-center space-x-4 text-slate-400 text-sm">
-                        <div className="flex items-center space-x-1">
-                          <User className="h-4 w-4" />
-                          <span>{project.client}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Calendar className="h-4 w-4" />
-                          <span>{formatDate(project.completedDate)}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
+                  <div className="space-y-3">
+                    {/* Controls Row - Top Right */}
+                    <div className="flex justify-end items-center gap-2">
                       <Button
-                        variant="outline"
-                        size="sm"
                         onClick={() => handleEdit(project)}
-                        className="border-custom-yellow text-custom-yellow hover:bg-custom-yellow hover:text-slate-900"
+                        className="bg-transparent border border-white/30 text-white hover:bg-white/10 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 h-auto"
                       >
-                        <Edit className="h-4 w-4 mr-1" />
+                        <Edit className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         Edit
                       </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button
-                            variant="outline"
-                            size="sm"
                             disabled={isDeleting === project.id}
-                            className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
+                            className="bg-red-500 text-white hover:bg-red-600 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 h-auto"
                           >
                             {isDeleting === project.id ? (
-                              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                              <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 animate-spin" />
                             ) : (
-                              <Trash2 className="h-4 w-4 mr-1" />
+                              <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                             )}
                             Delete
                           </Button>
@@ -263,6 +242,26 @@ export default function AdminProjectsPage() {
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
+                    </div>
+                    
+                    {/* Title and Badge Row - Left Aligned */}
+                    <div className="space-y-1">
+                      <CardTitle className="text-white flex items-center space-x-2">
+                        <span>{project.title}</span>
+                        <Badge variant="outline" className="border-custom-yellow text-custom-yellow">
+                          {project.category}
+                        </Badge>
+                      </CardTitle>
+                      <div className="flex items-center space-x-4 text-slate-400 text-sm">
+                        <div className="flex items-center space-x-1">
+                          <User className="h-4 w-4" />
+                          <span>{project.client}</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Calendar className="h-4 w-4" />
+                          <span>{formatDate(project.completedDate)}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </CardHeader>

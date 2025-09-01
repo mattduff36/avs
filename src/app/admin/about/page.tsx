@@ -159,13 +159,13 @@ export default function AdminAboutPage() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white/10 backdrop-blur-sm rounded-lg shadow-sm border border-white/20 p-6"
       >
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
           <h2 className="text-xl font-semibold text-white">Company Story</h2>
           {!isEditingStory && (
             <Button
               onClick={startEditStory}
               variant="outline"
-              className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent"
+              className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent self-start sm:self-auto"
             >
               <Edit2 className="h-4 w-4 mr-2" />
               Edit
@@ -189,13 +189,13 @@ export default function AdminAboutPage() {
 
             {/* Paragraphs */}
             <div>
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
                 <label className="block text-sm font-medium text-slate-300">Story Paragraphs</label>
                 <Button
                   onClick={addParagraph}
                   variant="outline"
                   size="sm"
-                  className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent"
+                  className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent self-start sm:self-auto"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Paragraph
@@ -230,7 +230,7 @@ export default function AdminAboutPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex space-x-2 pt-4">
+            <div className="flex flex-col sm:flex-row gap-2 pt-4">
               <Button
                 onClick={cancelEdit}
                 disabled={isSaving}
